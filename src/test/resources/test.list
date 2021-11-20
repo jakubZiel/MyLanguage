@@ -1,0 +1,10 @@
+"int" jakub = 22;
+int i = 0;
+
+while ( 1 < 5) i = i + 1;
+
+list l = [1 , 2, 3, 4, 5];
+
+l.foreach( x -> x * x);
+
+l.filter( x > 3);

@@ -5,7 +5,6 @@ import static DataSource.DataSource.NULL;
 import static Lexer.LexerState.*;
 import static Lexer.TokenType.*;
 import static java.lang.Character.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,36 +12,38 @@ import java.util.HashMap;
 public class Lexer {
     private final DataSource dataSource;
     private final ArrayList<Token> tokens;
-    private static final HashMap<String, TokenType> SPECIAL_TOKENS;
+    private static final HashMap<String, TokenType> KEYWORDS;
+    private static final HashMap<String, TokenType> SINGLE_SPECIAL;
+    private static final HashMap<String, TokenType> DOUBLE_SPECIAL;
 
-    public Lexer(DataSource dataSource){
+    public Lexer(DataSource dataSource) {
         this.dataSource = dataSource;
         tokens = new ArrayList<>();
     }
 
-    public void scanTokens() throws IOException {
-        while (dataSource.isEOF()){
+    private LexerState getNextState() throws RuntimeException, IOException {
+        if (dataSource.isEOF())
+            return END;
 
-            tokens.add(scanToken());
-        }
-        tokens.add(new Token());
-    }
+        consumeWhitespaces();
 
-    private LexerState getNextState(char character) throws RuntimeException{
+        char character = dataSource.peek();
         if (isDigit(character)) {
             return NUMBER;
-        }else if (isLetter(character)){
+        } else if (isLetter(character)) {
             return WORD;
-        }else if (character ==  '"'){
+        } else if (character == '"') {
             return STRING;
-        }else if (isSpecial(character)){
+        } else if (isSpecial(character)) {
             return SPECIAL;
+        } else if (character == '#') {
+            return COMMENT;
         }
         throw new IllegalArgumentException();
     }
 
     public Token scanToken() throws IOException {
-        switch (getNextState(dataSource.peek())){
+        switch (getNextState()) {
             case NUMBER:
                 return parseNumber();
             case STRING:
@@ -51,6 +52,8 @@ public class Lexer {
                 return parseWord();
             case SPECIAL:
                 return parseSpecial();
+            case COMMENT:
+                return parseComment();
             case END:
                 return new Token();
             default:
@@ -63,120 +66,133 @@ public class Lexer {
         dataSource.consume();
 
         StringBuilder string = new StringBuilder();
-        while (continueParsing){
-            char consumedChar = dataSource.consume();
+        while (continueParsing) {
+            char nextChar = dataSource.consume();
 
-            if (consumedChar == '"') {
+            if (nextChar == '"') {
                 continueParsing = false;
-            } else if (consumedChar == '\\') {
-                if (dataSource.peek() == '"'){
-                    string.append(dataSource.consume());
-                } else {
-                    throw new IOException("character other than \" after \\");
-                }
+            } else if (nextChar == '\\') {
+
+                string.append('\\');
+                string.append(dataSource.consume());
             } else {
-                string.append(consumedChar);
+                string.append(nextChar);
             }
         }
-
-        return new Token(STRING_T, dataSource.getCurrentPos() ,string.toString());
+        return new Token(STRING_T, dataSource.getCurrentPos(), string.toString());
     }
 
     private Token parseNumber() throws IOException {
-
         boolean continueParsing = true;
 
         StringBuilder number = new StringBuilder();
         boolean dotNotFound = true;
 
         while (continueParsing) {
-            char consumedChar = dataSource.consume();
+            char nextChar = dataSource.peek();
 
-            if (isDigit(consumedChar) ) {
-                number.append(consumedChar);
-            } else if (consumedChar == '.' && dotNotFound && isDigit(dataSource.peek())) {
-                number.append(consumedChar);
+            if (isDigit(nextChar)) {
+                number.append(nextChar);
+                dataSource.consume();
+            } else if (nextChar == '.' && dotNotFound && isDigit(dataSource.peek())) {
+                number.append(nextChar);
                 dotNotFound = false;
-            } else if (consumedChar == ' '){
-                continueParsing = false;
+                dataSource.consume();
             } else {
-                throw new IOException("wrong number formatting");
+                continueParsing = false;
             }
         }
-
         return new Token(NUMBER_T, dataSource.getCurrentPos(), dotNotFound ? Integer.parseInt(number.toString()) : Float.parseFloat(number.toString()));
     }
 
-    private Token parserWord() throws IOException {
+    private Token parseWord() throws IOException {
         boolean continueParsing = true;
 
         StringBuilder word = new StringBuilder();
 
         while (continueParsing) {
             char nextChar = dataSource.peek();
-            if (isDigit(nextChar) || isLetter(nextChar)){
+            if (isDigit(nextChar) || isLetter(nextChar)) {
                 word.append(nextChar);
                 dataSource.consume();
-            } else{
+            } else {
                 continueParsing = false;
             }
         }
         String parsedWord = word.toString();
 
-        return new Token(SPECIAL_TOKENS.getOrDefault(parsedWord, IDENTIFIER), dataSource.getCurrentPos(), parsedWord);
+        return new Token(KEYWORDS.getOrDefault(parsedWord, IDENTIFIER), dataSource.getCurrentPos(), parsedWord);
     }
 
-    private Token parseSpecial(){
-        return new Token();
+    private Token parseSpecial() throws IOException {
+        char firstChar = dataSource.consume();
+        char nextChar = dataSource.peek();
+
+        if (">|&=".contains(String.valueOf(nextChar))){
+            dataSource.consume();
+            String special = String.valueOf(firstChar) + nextChar;
+            return new Token(DOUBLE_SPECIAL.get(special), dataSource.getCurrentPos(),  special);
+        }
+        return new Token(SINGLE_SPECIAL.get(String.valueOf(firstChar)), dataSource.getCurrentPos(),  String.valueOf(firstChar));
     }
 
-    private Token parseWord(){
-        return new Token();
+    private Token parseComment() {
+        return new Token(COMMENT_T, dataSource.getCurrentPos(), "comment");
     }
 
-    private boolean isSpecial(char character){
-        return isDefined(character);
+    private boolean isSpecial(char character) {
+        return SINGLE_SPECIAL.containsKey(String.valueOf(character)) || "!|&-".contains(String.valueOf(character));
+    }
+
+    private void consumeWhitespaces() throws IOException {
+        while ("\n ".contains(String.valueOf(dataSource.peek()))) {
+            dataSource.consume();
+        }
     }
 
     static {
-        SPECIAL_TOKENS = new HashMap<>();
+        KEYWORDS = new HashMap<>();
+        SINGLE_SPECIAL = new HashMap<>();
+        DOUBLE_SPECIAL = new HashMap<>();
 
-        SPECIAL_TOKENS.put("(", PAREN_L);
-        SPECIAL_TOKENS.put(")", PAREN_R);
-        SPECIAL_TOKENS.put("{", CURLY_L);
-        SPECIAL_TOKENS.put("}", CURLY_R);
-        SPECIAL_TOKENS.put("<", ANGLE_L);
-        SPECIAL_TOKENS.put(">", ANGLE_R);
-        SPECIAL_TOKENS.put("[", SQUARE_L);
-        SPECIAL_TOKENS.put("]", SQUARE_R);
-        SPECIAL_TOKENS.put("->", ARROW);
-        SPECIAL_TOKENS.put(".",  DOT);
-        SPECIAL_TOKENS.put(",", COMA);
-        SPECIAL_TOKENS.put(";", SEMICOLON);
-        SPECIAL_TOKENS.put("=", ASSIGN);
-        SPECIAL_TOKENS.put(String.valueOf(NULL), EOF);
+        SINGLE_SPECIAL.put("(", PAREN_L);
+        SINGLE_SPECIAL.put(")", PAREN_R);
+        SINGLE_SPECIAL.put("{", CURLY_L);
+        SINGLE_SPECIAL.put("}", CURLY_R);
+        SINGLE_SPECIAL.put("<", ANGLE_L);
+        SINGLE_SPECIAL.put(">", ANGLE_R);
+        SINGLE_SPECIAL.put("[", SQUARE_L);
+        SINGLE_SPECIAL.put("]", SQUARE_R);
+        SINGLE_SPECIAL.put(".", DOT);
+        SINGLE_SPECIAL.put(",", COMA);
+        SINGLE_SPECIAL.put(";", SEMICOLON);
+        SINGLE_SPECIAL.put("=", ASSIGN);
+        SINGLE_SPECIAL.put(String.valueOf(NULL), END_T);
 
-        SPECIAL_TOKENS.put("while", WHILE);
-        SPECIAL_TOKENS.put("if", IF);
-        SPECIAL_TOKENS.put("else", ELSE);
-        SPECIAL_TOKENS.put("return", RETURN);
+        SINGLE_SPECIAL.put("+", ADD);
+        SINGLE_SPECIAL.put("-", SUBTRACT);
+        SINGLE_SPECIAL.put("/", DIVIDE);
+        SINGLE_SPECIAL.put("*", MULTIPLY);
+        SINGLE_SPECIAL.put("%", MODULO);
 
-        SPECIAL_TOKENS.put("list", LIST);
-        SPECIAL_TOKENS.put("int", INT);
-        SPECIAL_TOKENS.put("double", DOUBLE);
-        SPECIAL_TOKENS.put("string", STRING_T);
+        KEYWORDS.put("while", WHILE);
+        KEYWORDS.put("if", IF);
+        KEYWORDS.put("else", ELSE);
+        KEYWORDS.put("return", RETURN);
 
-        SPECIAL_TOKENS.put("!=", N_EQUAL);
-        SPECIAL_TOKENS.put("==", EQUAL);
-        SPECIAL_TOKENS.put(">=", GREATER_OR_EQUAL);
-        SPECIAL_TOKENS.put("<=", LESS_OR_EQUAL);
-        SPECIAL_TOKENS.put("||", OR);
-        SPECIAL_TOKENS.put("&&", AND);
+        KEYWORDS.put("list", LIST);
+        KEYWORDS.put("int", INT);
+        KEYWORDS.put("double", DOUBLE);
+        KEYWORDS.put("string", STRING_T);
+        KEYWORDS.put("foreach", FOREACH);
+        KEYWORDS.put("filter", FILTER);
 
-        SPECIAL_TOKENS.put("+", ADD);
-        SPECIAL_TOKENS.put("-", SUBTRACT);
-        SPECIAL_TOKENS.put("/", DIVIDE);
-        SPECIAL_TOKENS.put("*", MULTIPLY);
-        SPECIAL_TOKENS.put("%", MODULO);
+        DOUBLE_SPECIAL.put("!=", N_EQUAL);
+        DOUBLE_SPECIAL.put("==", EQUAL);
+        DOUBLE_SPECIAL.put(">=", GREATER_OR_EQUAL);
+        DOUBLE_SPECIAL.put("<=", LESS_OR_EQUAL);
+        DOUBLE_SPECIAL.put("||", OR);
+        DOUBLE_SPECIAL.put("&&", AND);
+        DOUBLE_SPECIAL.put("->", ARROW);
     }
 }

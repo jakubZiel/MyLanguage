@@ -50,14 +50,17 @@ public class DataSource {
         if (EOF) return NULL;
 
         if (buffer == null || current > buffer.length() - 1){
-            auxBuffer = fileReader.readLine();
+            if (auxBuffer == null) {
+                auxBuffer = fileReader.readLine();
 
-            if (auxBuffer == null){
-                return NULL;
-            }else if (auxBuffer.equals("")){
-                return '\n';
-            }else
-                return auxBuffer.charAt(0);
+                if (auxBuffer == null){
+                    return NULL;
+                }else if (auxBuffer.equals("")){
+                    return '\n';
+                }else
+                    return auxBuffer.charAt(0);
+            } else
+                return  auxBuffer.equals("") ? '\n' : auxBuffer.charAt(0);
         }
 
         return  buffer.charAt(current);
@@ -77,16 +80,5 @@ public class DataSource {
 
     public Pair<Integer, Integer> getCurrentPos(){
         return new Pair<>(line, current);
-    }
-
-    public static void main(String[] args) throws IOException {
-        String absPath = "/media/jzielins/SD/sem6/TKOM/project/src/main/resources/test.list";
-        DataSource dataSource = new DataSource(absPath);
-        while (!dataSource.isEOF()){
-            //System.out.printf("cur = %c peek = %c at (l, c) = (%d, %d)\n", dataSource.advance(), dataSource.peek(), dataSource.getLine(), dataSource.getCurrent() );
-            System.out.printf("%c", dataSource.consume());
-        }
-
-        System.out.println("char : " + '\f');
     }
 }

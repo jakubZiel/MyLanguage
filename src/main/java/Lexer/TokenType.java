@@ -14,12 +14,14 @@ public enum TokenType {
     COMA,
     SEMICOLON,
     ASSIGN,
-    EOF,
+    END_T,
 
     WHILE,
     IF,
     ELSE,
     RETURN,
+    FOREACH,
+    FILTER,
 
     LIST,
     INT,
@@ -43,4 +45,6 @@ public enum TokenType {
 
     IDENTIFIER,
     NUMBER_T,
+
+    COMMENT_T,
 }
