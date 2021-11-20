@@ -37,5 +37,10 @@ public enum TokenType {
     SUBTRACT,
     DIVIDE,
     MULTIPLY,
-    MODULO
+    MODULO,
+
+    NULL,
+
+    IDENTIFIER,
+    NUMBER_T,
 }

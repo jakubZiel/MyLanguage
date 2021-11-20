@@ -5,5 +5,6 @@ public enum LexerState {
     STRING,
     WORD,
     SPECIAL,
+    COMMENT,
     END
 }
