@@ -11,6 +11,10 @@ public class Token extends BaseToken{
         this.value = value;
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public Token(){
         super(NULL, new Position(-1, -1));
     }

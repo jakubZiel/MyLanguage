@@ -11,6 +11,7 @@ import static java.lang.Character.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import DataSource.Position;
 
 public class Lexer {
     private final IDataSource dataSource;
@@ -64,20 +65,23 @@ public class Lexer {
         }
     }
 
-    private Token parseString() throws IOException {
+    private Token parseString() throws IOException, UnexpectedCharException {
         boolean continueParsing = true;
+        Position beg = dataSource.getCurrentPos();
         dataSource.consume();
 
         StringBuilder string = new StringBuilder();
         while (continueParsing) {
+            if (beg.line != dataSource.getLine()) {
+                throw new UnexpectedCharException("unclosed string at " + beg, beg);
+            }
             char nextChar = dataSource.consume();
 
             if (nextChar == '"') {
                 continueParsing = false;
             } else if (nextChar == '\\') {
-
-                string.append('\\');
-                string.append(dataSource.consume());
+                char escaped = dataSource.consume();
+                string.append(escaped);
             } else {
                 string.append(nextChar);
             }
@@ -106,7 +110,7 @@ public class Lexer {
             } else
                 continueParsing = false;
         }
-        return new Token(NUMBER_T, dataSource.getCurrentPos(), dotNotFound ? Integer.parseInt(number.toString()) : Float.parseFloat(number.toString()));
+        return new Token(NUMBER_T, dataSource.getCurrentPos(), number.toString());
     }
 
     private Token parseWord() throws IOException {
@@ -141,7 +145,6 @@ public class Lexer {
     }
 
     private Token parseComment() throws IOException {
-
         int begLine = dataSource.getLine();
 
         while (begLine == dataSource.getLine()){
