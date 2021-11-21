@@ -1,12 +1,12 @@
 package Lexer;
 
-import org.javatuples.Pair;
+import DataSource.Position;
 
 public abstract class BaseToken {
-    public final Pair<Integer, Integer> position;
+    public final Position position;
     public final TokenType type;
 
-    public BaseToken(TokenType type, Pair<Integer, Integer> position) {
+    public BaseToken(TokenType type, Position position) {
         this.type = type;
         this.position = position;
     }

@@ -3,6 +3,7 @@ package Lexer;
 import DataSource.DataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 
+import DataSource.IDataSource;
 import static DataSource.DataSource.NULL;
 import static Lexer.LexerState.*;
 import static Lexer.TokenType.*;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Lexer {
-    private final DataSource dataSource;
+    private final IDataSource dataSource;
     private final ArrayList<Token> tokens;
     private static final HashMap<String, TokenType> KEYWORDS;
     private static final HashMap<String, TokenType> SINGLE_SPECIAL;

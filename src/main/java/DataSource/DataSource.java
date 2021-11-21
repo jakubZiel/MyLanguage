@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class DataSource {
+public class DataSource implements IDataSource {
 
     public static final char NULL = '\0';
     private final BufferedReader fileReader;
@@ -78,7 +78,7 @@ public class DataSource {
         return line;
     }
 
-    public Pair<Integer, Integer> getCurrentPos(){
-        return new Pair<>(line, current);
+    public Position getCurrentPos(){
+        return new Position(line, current);
     }
 }
