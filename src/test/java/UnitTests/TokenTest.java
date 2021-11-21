@@ -12,7 +12,6 @@ import java.util.HashMap;
 import Lexer.TokenType;
 
 class TokenTest {
-
     public void testTokenSet(HashMap<String, TokenType> SET){
         SET.keySet().forEach(token -> {
             IDataSource ds = new DataSourceString(token);

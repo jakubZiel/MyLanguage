@@ -108,7 +108,7 @@ public class Lexer {
                 if (!isDigit(dataSource.peek()))
                     throw new UnexpectedCharException("no '.' at the end of the number", dataSource.getCurrentPos());
             } else if (isLetter(nextChar)){
-                throw new UnexpectedCharException(String.format("received %c when digit was expected", nextChar), dataSource.getCurrentPos());
+                throw new UnexpectedCharException(String.format("received '%c' when digit was expected", nextChar), dataSource.getCurrentPos());
             } else
                 continueParsing = false;
         }
