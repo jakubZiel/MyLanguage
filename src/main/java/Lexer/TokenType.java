@@ -22,6 +22,9 @@ public enum TokenType {
     RETURN,
     FOREACH,
     FILTER,
+    ADD_LIST,
+    REMOVE_LIST,
+    PRINT,
 
     LIST,
     INT,

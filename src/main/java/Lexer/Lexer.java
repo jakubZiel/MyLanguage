@@ -1,6 +1,8 @@
 package Lexer;
 
 import DataSource.DataSource;
+import ExceptionHandler.Exceptions.UnexpectedCharException;
+
 import static DataSource.DataSource.NULL;
 import static Lexer.LexerState.*;
 import static Lexer.TokenType.*;
@@ -42,7 +44,7 @@ public class Lexer {
         throw new IllegalArgumentException();
     }
 
-    public Token scanToken() throws IOException {
+    public Token scanToken() throws IOException, UnexpectedCharException {
         switch (getNextState()) {
             case NUMBER:
                 return parseNumber();
@@ -82,7 +84,7 @@ public class Lexer {
         return new Token(STRING_T, dataSource.getCurrentPos(), string.toString());
     }
 
-    private Token parseNumber() throws IOException {
+    private Token parseNumber() throws IOException, UnexpectedCharException {
         boolean continueParsing = true;
 
         StringBuilder number = new StringBuilder();
@@ -98,9 +100,10 @@ public class Lexer {
                 number.append(nextChar);
                 dotNotFound = false;
                 dataSource.consume();
-            } else {
+            } else if (isLetter(nextChar)){
+                throw new UnexpectedCharException(String.format("received %c when digit was expected", nextChar), dataSource.getCurrentPos());
+            } else
                 continueParsing = false;
-            }
         }
         return new Token(NUMBER_T, dataSource.getCurrentPos(), dotNotFound ? Integer.parseInt(number.toString()) : Float.parseFloat(number.toString()));
     }
@@ -136,7 +139,13 @@ public class Lexer {
         return new Token(SINGLE_SPECIAL.get(String.valueOf(firstChar)), dataSource.getCurrentPos(),  String.valueOf(firstChar));
     }
 
-    private Token parseComment() {
+    private Token parseComment() throws IOException {
+
+        int begLine = dataSource.getLine();
+
+        while (begLine == dataSource.getLine()){
+            dataSource.consume();
+        }
         return new Token(COMMENT_T, dataSource.getCurrentPos(), "comment");
     }
 
@@ -186,6 +195,9 @@ public class Lexer {
         KEYWORDS.put("string", STRING_T);
         KEYWORDS.put("foreach", FOREACH);
         KEYWORDS.put("filter", FILTER);
+        KEYWORDS.put("add", ADD_LIST);
+        KEYWORDS.put("remove", REMOVE_LIST);
+        KEYWORDS.put("print", PRINT);
 
         DOUBLE_SPECIAL.put("!=", N_EQUAL);
         DOUBLE_SPECIAL.put("==", EQUAL);
