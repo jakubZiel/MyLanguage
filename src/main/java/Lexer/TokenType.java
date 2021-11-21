@@ -22,6 +22,7 @@ public enum TokenType {
     RETURN,
     FOREACH,
     FILTER,
+    ELIF,
     ADD_LIST,
     REMOVE_LIST,
     PRINT,
@@ -37,6 +38,7 @@ public enum TokenType {
     LESS_OR_EQUAL,
     OR,
     AND,
+    NOT,
 
     ADD,
     SUBTRACT,

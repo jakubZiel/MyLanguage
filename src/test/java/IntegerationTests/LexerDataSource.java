@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LexerDataSource {
 
+    String root = System.getProperty("user.dir");
+
     List<TokenType> scanFile(String filePath) throws IOException, UnexpectedCharException {
         DataSource dataSource = new DataSource(filePath);
 
@@ -35,10 +37,12 @@ class LexerDataSource {
             INT, IDENTIFIER, PAREN_L, INT, IDENTIFIER, PAREN_R, CURLY_L,
             IF, PAREN_L, IDENTIFIER, ANGLE_L, NUMBER_T, PAREN_R,
             RETURN, NUMBER_T, SEMICOLON,
+            ELIF, PAREN_L, IDENTIFIER, ANGLE_L, NUMBER_T, PAREN_R, RETURN, NUMBER_T, SEMICOLON,
             RETURN, IDENTIFIER, PAREN_L, IDENTIFIER, SUBTRACT, NUMBER_T, PAREN_R, ADD, IDENTIFIER, PAREN_L, IDENTIFIER, SUBTRACT, NUMBER_T, PAREN_R, SEMICOLON,
             CURLY_R, END_T
         );
-        assertEquals(tokens, scanFile("/media/jzielins/SD/sem6/TKOM/project/src/test/resources/test1.list"));
+        assertEquals(tokens, scanFile(root + "/src/test/resources/test1.list"));
+
     }
 
     @Test
@@ -49,7 +53,7 @@ class LexerDataSource {
             INT, IDENTIFIER, ASSIGN, IDENTIFIER, ADD, IDENTIFIER, SEMICOLON,
             CURLY_R, END_T
         );
-        assertEquals(tokens, scanFile("/media/jzielins/SD/sem6/TKOM/project/src/test/resources/test2.list"));
+        assertEquals(tokens, scanFile(root + "/src/test/resources/test2.list"));
     }
 
     @Test
@@ -63,6 +67,6 @@ class LexerDataSource {
             RETURN, NUMBER_T, SEMICOLON,
             CURLY_R, END_T
         );
-        assertEquals(tokens, scanFile("/media/jzielins/SD/sem6/TKOM/project/src/test/resources/test3.list"));
+        assertEquals(tokens, scanFile(root + "/src/test/resources/test3.list"));
     }
 }

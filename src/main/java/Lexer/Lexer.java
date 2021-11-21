@@ -176,6 +176,7 @@ public class Lexer {
         SINGLE_SPECIAL.put(",", COMA);
         SINGLE_SPECIAL.put(";", SEMICOLON);
         SINGLE_SPECIAL.put("=", ASSIGN);
+        SINGLE_SPECIAL.put("!", NOT);
         SINGLE_SPECIAL.put(String.valueOf(NULL), END_T);
 
         SINGLE_SPECIAL.put("+", ADD);
@@ -187,6 +188,7 @@ public class Lexer {
         KEYWORDS.put("while", WHILE);
         KEYWORDS.put("if", IF);
         KEYWORDS.put("else", ELSE);
+        KEYWORDS.put("elseif", ELIF);
         KEYWORDS.put("return", RETURN);
 
         KEYWORDS.put("list", LIST);
