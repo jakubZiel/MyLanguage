@@ -1,9 +1,0 @@
-int main(){
-
-    int a = -1234;
-    list<int> intList = [1 , 2 , 3 , 4];
-    intList = intList.filter(ele -> ele > 3);
-
-    int result = intList[0] + intList[1];
-    return 0;
-}
