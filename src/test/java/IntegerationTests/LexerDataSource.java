@@ -76,7 +76,7 @@ class LexerDataSource {
 
     @Test
     void testLexemesFile1() throws UnexpectedCharException, IOException{
-        List<String> lexems = List.of(
+        List<String> lexemes = List.of(
                 "int", "fibb", "(", "int", "n", ")", "{",
                 "if", "(", "n", "<", "2", ")", "{",
                 "return", "1", ";",
@@ -87,12 +87,12 @@ class LexerDataSource {
                 "}",
                 "\0"
         );
-        assertEquals(lexems, getLexemes(root + "/src/test/resources/test1.list"));
+        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test1.list"));
     }
 
     @Test
     void testLexemesFile3() throws UnexpectedCharException, IOException{
-        List<String> lexems = List.of(
+        List<String> lexemes = List.of(
                 "int", "main", "(", ")", "{",
                 "int", "a", "=", "-", "1234", ";",
                 "list", "<", "int", ">", "intList", "=", "[", "1", ",", "2", ",", "3", ",", "4", "]", ";",
@@ -102,6 +102,6 @@ class LexerDataSource {
                 "}",
                 "\0"
         );
-        assertEquals(lexems, getLexemes(root + "/src/test/resources/test3.list"));
+        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test3.list"));
     }
 }

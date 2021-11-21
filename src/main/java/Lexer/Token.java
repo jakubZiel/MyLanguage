@@ -15,6 +15,8 @@ public class Token extends BaseToken{
         return value;
     }
 
+
+
     public Token(){
         super(NULL, new Position(-1, -1));
     }

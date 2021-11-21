@@ -1,8 +1,6 @@
 package Lexer;
 
-import DataSource.DataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
-
 import DataSource.IDataSource;
 import static DataSource.DataSource.NULL;
 import static Lexer.LexerState.*;
@@ -14,13 +12,13 @@ import java.util.HashMap;
 import DataSource.Position;
 
 public class Lexer {
-    private final IDataSource dataSource;
+    private IDataSource dataSource;
     private final ArrayList<Token> tokens;
-    private static final HashMap<String, TokenType> KEYWORDS;
-    private static final HashMap<String, TokenType> SINGLE_SPECIAL;
-    private static final HashMap<String, TokenType> DOUBLE_SPECIAL;
+    public static final HashMap<String, TokenType> KEYWORDS;
+    public static final HashMap<String, TokenType> SINGLE_SPECIAL;
+    public static final HashMap<String, TokenType> DOUBLE_SPECIAL;
 
-    public Lexer(DataSource dataSource) {
+    public Lexer(IDataSource dataSource) {
         this.dataSource = dataSource;
         tokens = new ArrayList<>();
     }
@@ -72,7 +70,7 @@ public class Lexer {
 
         StringBuilder string = new StringBuilder();
         while (continueParsing) {
-            if (beg.line != dataSource.getLine()) {
+            if (beg.line != dataSource.getLine() || dataSource.isEOF()) {
                 throw new UnexpectedCharException("unclosed string at " + beg, beg);
             }
             char nextChar = dataSource.consume();
@@ -101,10 +99,14 @@ public class Lexer {
             if (isDigit(nextChar)) {
                 number.append(nextChar);
                 dataSource.consume();
-            } else if (nextChar == '.' && dotNotFound && isDigit(dataSource.peek())) {
-                number.append(nextChar);
+            } else if (nextChar == '.') {
+                if (!dotNotFound)
+                    throw new UnexpectedCharException("more than 1 '.' in number", dataSource.getCurrentPos());
                 dotNotFound = false;
+                number.append(nextChar);
                 dataSource.consume();
+                if (!isDigit(dataSource.peek()))
+                    throw new UnexpectedCharException("no '.' at the end of the number", dataSource.getCurrentPos());
             } else if (isLetter(nextChar)){
                 throw new UnexpectedCharException(String.format("received %c when digit was expected", nextChar), dataSource.getCurrentPos());
             } else
@@ -147,7 +149,7 @@ public class Lexer {
     private Token parseComment() throws IOException {
         int begLine = dataSource.getLine();
 
-        while (begLine == dataSource.getLine()){
+        while (!dataSource.isEOF() && begLine == dataSource.getLine()){
             dataSource.consume();
         }
         return new Token(COMMENT_T, dataSource.getCurrentPos(), "comment");
@@ -161,6 +163,10 @@ public class Lexer {
         while ("\n ".contains(String.valueOf(dataSource.peek()))) {
             dataSource.consume();
         }
+    }
+
+    public void setDataSource(IDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     static {
