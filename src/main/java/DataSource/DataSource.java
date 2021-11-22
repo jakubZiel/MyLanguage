@@ -29,7 +29,7 @@ public class DataSource implements IDataSource {
             line++;
             current = 0;
             auxBuffer = null;
-        }else if (buffer == null || current > buffer.length() - 1){
+        } else if (buffer == null || current > buffer.length() - 1){
             buffer = fileReader.readLine();
             line++;
             current = 0;
@@ -60,7 +60,6 @@ public class DataSource implements IDataSource {
             } else
                 return  auxBuffer.equals("") ? '\n' : auxBuffer.charAt(0);
         }
-
         return  buffer.charAt(current);
     }
 

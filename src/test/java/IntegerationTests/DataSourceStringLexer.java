@@ -26,6 +26,7 @@ class DataSourceStringLexer {
                 "a = a - 1;" +
                 "} " +
                 "}";
+
         IDataSource ds = new DataSourceString(source);
 
         Lexer lexer = new Lexer(ds);

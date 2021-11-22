@@ -137,11 +137,11 @@ public class Lexer {
     private Token parseSpecial() throws IOException {
         char firstChar = dataSource.consume();
         char nextChar = dataSource.peek();
+        String combined = String.valueOf(firstChar) + nextChar;
 
-        if (">|&=".contains(String.valueOf(nextChar))){
+        if (DOUBLE_SPECIAL.containsKey(combined)) {
             dataSource.consume();
-            String special = String.valueOf(firstChar) + nextChar;
-            return new Token(DOUBLE_SPECIAL.get(special), dataSource.getCurrentPos(),  special);
+            return new Token(DOUBLE_SPECIAL.get(combined), dataSource.getCurrentPos(), combined);
         }
         return new Token(SINGLE_SPECIAL.get(String.valueOf(firstChar)), dataSource.getCurrentPos(),  String.valueOf(firstChar));
     }
