@@ -3,7 +3,6 @@ package Lexer;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSource.NULL;
-import static Lexer.LexerState.*;
 import static Lexer.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
@@ -22,115 +21,86 @@ public class Lexer {
         this.dataSource = dataSource;
         tokens = new ArrayList<>();
     }
-
-    private LexerState getNextState() throws RuntimeException, IOException {
+    public Token scanToken() throws RuntimeException, IOException, UnexpectedCharException {
         if (dataSource.isEOF())
-            return END;
+            return new Token();
 
         consumeWhitespaces();
 
         char character = dataSource.peek();
         if (isDigit(character)) {
-            return NUMBER;
+            return parseNumber();
         } else if (isLetter(character)) {
-            return WORD;
+            return parseWord();
         } else if (character == '"') {
-            return STRING;
+            return parseString();
         } else if (isSpecial(character)) {
-            return SPECIAL;
+            return parseSpecial();
         } else if (character == '#') {
-            return COMMENT;
+            return parseComment();
         }
         throw new IllegalArgumentException();
     }
 
-    public Token scanToken() throws IOException, UnexpectedCharException {
-        switch (getNextState()) {
-            case NUMBER:
-                return parseNumber();
-            case STRING:
-                return parseString();
-            case WORD:
-                return parseWord();
-            case SPECIAL:
-                return parseSpecial();
-            case COMMENT:
-                return parseComment();
-            case END:
-                return new Token();
-            default:
-                throw new IOException("EOF exception");
-        }
-    }
-
     private Token parseString() throws IOException, UnexpectedCharException {
-        boolean continueParsing = true;
         Position beg = dataSource.getCurrentPos();
         dataSource.consume();
 
         StringBuilder string = new StringBuilder();
-        while (continueParsing) {
+        while (true) {
             if (beg.line != dataSource.getLine() || dataSource.isEOF()) {
                 throw new UnexpectedCharException("unclosed string at " + beg, beg);
             }
             char nextChar = dataSource.consume();
-
             if (nextChar == '"') {
-                continueParsing = false;
+                break;
             } else if (nextChar == '\\') {
                 char escaped = dataSource.consume();
                 string.append(escaped);
-            } else {
+            } else
                 string.append(nextChar);
-            }
         }
-        return new Token(STRING_T, dataSource.getCurrentPos(), string.toString());
+        return new Token(STRING_T, beg, string.toString());
     }
 
     private Token parseNumber() throws IOException, UnexpectedCharException {
-        boolean continueParsing = true;
-
         StringBuilder number = new StringBuilder();
-        boolean dotNotFound = true;
+        boolean dotFound = false;
 
-        while (continueParsing) {
+        while (true) {
             char nextChar = dataSource.peek();
 
             if (isDigit(nextChar)) {
                 number.append(nextChar);
                 dataSource.consume();
             } else if (nextChar == '.') {
-                if (!dotNotFound)
+                if (dotFound)
                     throw new UnexpectedCharException("more than 1 '.' in number", dataSource.getCurrentPos());
-                dotNotFound = false;
+                dotFound = true;
                 number.append(nextChar);
                 dataSource.consume();
                 if (!isDigit(dataSource.peek()))
-                    throw new UnexpectedCharException("no '.' at the end of the number", dataSource.getCurrentPos());
+                    throw new UnexpectedCharException("'.' at the end of the number", dataSource.getCurrentPos());
             } else if (isLetter(nextChar)){
                 throw new UnexpectedCharException(String.format("received '%c' when digit was expected", nextChar), dataSource.getCurrentPos());
             } else
-                continueParsing = false;
+                break;
         }
         return new Token(NUMBER_T, dataSource.getCurrentPos(), number.toString());
     }
 
     private Token parseWord() throws IOException {
-        boolean continueParsing = true;
-
         StringBuilder word = new StringBuilder();
 
-        while (continueParsing) {
+        while (true) {
             char nextChar = dataSource.peek();
             if (isDigit(nextChar) || isLetter(nextChar)) {
                 word.append(nextChar);
                 dataSource.consume();
-            } else {
-                continueParsing = false;
-            }
+            } else
+                break;
         }
         String parsedWord = word.toString();
-
         return new Token(KEYWORDS.getOrDefault(parsedWord, IDENTIFIER), dataSource.getCurrentPos(), parsedWord);
     }
 

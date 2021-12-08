@@ -13,9 +13,11 @@ import Lexer.TokenType;
 
 class TokenTest {
     public void testTokenSet(HashMap<String, TokenType> SET){
+        Lexer lx = new Lexer(null);
+
         SET.keySet().forEach(token -> {
             IDataSource ds = new DataSourceString(token);
-            Lexer lx = new Lexer(ds);
+            lx.setDataSource(ds);
             try {
                 var scannedToken = lx.scanToken();
                 assertEquals(scannedToken.type, SET.get(token));
@@ -82,7 +84,8 @@ class TokenTest {
         assertEquals(expected, scannedToken.getValue());
     }
 
-    @Test public void testStringError() {
+    @Test
+    public void testStringError() {
 
         String source = "\"hello my friend";
 
