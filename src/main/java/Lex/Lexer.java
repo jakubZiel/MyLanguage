@@ -1,9 +1,9 @@
-package Lexer;
+package Lex;
 
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSource.NULL;
-import static Lexer.TokenType.*;
+import static Lex.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class Lexer {
             } else
                 break;
         }
-        return new Token(NUMBER_T, dataSource.getCurrentPos(), number.toString());
+        return new Token(NUMBER_T, dataSource.getCurrentPos(), Double.valueOf(number.toString()));
     }
 
     private Token parseWord() throws IOException {

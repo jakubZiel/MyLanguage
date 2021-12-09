@@ -1,4 +1,4 @@
-package Lexer;
+package Lex;
 
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 

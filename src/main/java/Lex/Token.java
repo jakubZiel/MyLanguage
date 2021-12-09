@@ -1,7 +1,7 @@
-package Lexer;
+package Lex;
 
 import DataSource.Position;
-import static Lexer.TokenType.*;
+import static Lex.TokenType.*;
 
 public class Token extends BaseToken{
     private Object value;

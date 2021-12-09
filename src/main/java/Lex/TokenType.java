@@ -1,4 +1,4 @@
-package Lexer;
+package Lex;
 
 public enum TokenType {
     PAREN_L,
