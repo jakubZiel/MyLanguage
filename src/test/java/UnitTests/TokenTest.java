@@ -3,13 +3,13 @@ package UnitTests;
 import DataSource.DataSourceString;
 import DataSource.IDataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lex.Lexer;
-import static Lex.Lexer.*;
+import Lexer.Lexer;
+import static Lexer.Lexer.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.HashMap;
-import Lex.TokenType;
+import Lexer.TokenType;
 
 class TokenTest {
     public void testTokenSet(HashMap<String, TokenType> SET){

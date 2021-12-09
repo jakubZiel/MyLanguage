@@ -1,9 +1,9 @@
-package Lex;
+package Lexer;
 
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSource.NULL;
-import static Lex.TokenType.*;
+import static Lexer.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -2,15 +2,15 @@ package IntegerationTests;
 
 import DataSource.DataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lex.Lexer;
-import Lex.Token;
+import Lexer.Lexer;
+import Lexer.Token;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import Lex.TokenType;
-import static Lex.TokenType.*;
+import Lexer.TokenType;
+import static Lexer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LexerDataSource {
