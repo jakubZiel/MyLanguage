@@ -28,6 +28,7 @@ public enum TokenType {
     PRINT,
 
     LIST,
+    VOID,
     INT,
     DOUBLE,
     STRING_T,

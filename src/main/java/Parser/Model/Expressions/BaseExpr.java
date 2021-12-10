@@ -1,4 +1,5 @@
 package Parser.Model.Expressions;
 
-public class MultExp {
+public class BaseExpr {
+
 }

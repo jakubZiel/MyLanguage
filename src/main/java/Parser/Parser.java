@@ -3,10 +3,8 @@ package Parser;
 import DataSource.DataSourceString;
 import DataSource.IDataSource;
 import Lexer.Token;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lexer.Lexer;
 
-import java.io.IOException;
+import Lexer.Lexer;
 
 import Lexer.TokenType;
 
@@ -19,7 +17,8 @@ public class Parser {
         this.lexer = lexer;
     }
 
-    private Token getToken() throws UnexpectedCharException, IOException {
+
+    private Token getToken() throws Exception {
         if (peeked != null){
             Token token = peeked;
             peeked = null;
@@ -28,14 +27,14 @@ public class Parser {
         return lexer.scanToken();
     }
 
-    private Token peekToken() throws UnexpectedCharException, IOException {
+    private Token peekToken() throws Exception {
         if (peeked == null){
             peeked = lexer.scanToken();
         }
         return peeked;
     }
 
-    public static void main(String[] args) throws UnexpectedCharException, IOException {
+    public static void main(String[] args) throws Exception {
         String source =
                 "int main(){" +
                         "int a = 34;" +
@@ -54,7 +53,6 @@ public class Parser {
             if (token.type ==  TokenType.END_T)
                 break;
         }
-
     }
 
 }

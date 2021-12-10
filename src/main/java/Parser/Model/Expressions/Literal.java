@@ -1,5 +1,4 @@
 package Parser.Model.Expressions;
 
-public class BaseExp {
-
+public class Literal {
 }

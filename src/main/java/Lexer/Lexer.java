@@ -86,7 +86,8 @@ public class Lexer {
             } else
                 break;
         }
-        return new Token(NUMBER_T, dataSource.getCurrentPos(), Double.valueOf(number.toString()));
+        Object value = dotFound ? Double.parseDouble(number.toString()) : Integer.parseInt(number.toString());
+        return new Token(NUMBER_T, dataSource.getCurrentPos(), value);
     }
 
     private Token parseWord() throws IOException {
@@ -173,6 +174,7 @@ public class Lexer {
 
         KEYWORDS.put("list", LIST);
         KEYWORDS.put("int", INT);
+        KEYWORDS.put("void", VOID);
         KEYWORDS.put("double", DOUBLE);
         KEYWORDS.put("string", STRING_T);
         KEYWORDS.put("foreach", FOREACH);
