@@ -1,6 +1,5 @@
 package IntegerationTests;
 
-import DataSource.DataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import Lexer.Lexer;
 import Lexer.Token;
@@ -13,7 +12,7 @@ import Lexer.TokenType;
 import static Lexer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import DataSource.DataSourceIO;
-class LexerDataSource {
+class LexerDataSourceLine {
     private final String root = System.getProperty("user.dir");
 
     List<Token> scanFile(String filePath) throws IOException, UnexpectedCharException {

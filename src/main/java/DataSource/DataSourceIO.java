@@ -2,9 +2,8 @@ package DataSource;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import Lexer.Lexer;
 
-import static DataSource.DataSource.NULL;
+import static DataSource.DataSourceLine.NULL;
 import java.io.*;
-import Lexer.Token;
 
 public class DataSourceIO implements IDataSource{
 

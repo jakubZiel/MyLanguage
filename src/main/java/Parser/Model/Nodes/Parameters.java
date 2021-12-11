@@ -1,8 +1,17 @@
 package Parser.Model.Nodes;
 
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Parameters {
-    List<Signature> signatures;
+    private List<Signature> signatures;
+
+    public Parameters(){
+        signatures = new LinkedList<>();
+    }
+
+    public void addSignature(Signature signature){
+        signatures.add(signature);
+    }
 }

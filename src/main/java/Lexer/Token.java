@@ -15,7 +15,13 @@ public class Token extends BaseToken{
         return value;
     }
 
-
+    public boolean tokenIs(TokenType... tokenTypes){
+        for (var type : tokenTypes){
+            if (this.type == type)
+                return true;
+        }
+        return false;
+    }
 
     public Token(){
         super(NULL, new Position(-1, -1));

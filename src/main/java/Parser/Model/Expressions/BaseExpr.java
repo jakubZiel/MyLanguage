@@ -1,5 +1,7 @@
 package Parser.Model.Expressions;
 
-public class BaseExpr {
+import Parser.Model.Node;
+
+public class BaseExpr extends Node {
 
 }

@@ -1,4 +1,8 @@
 package Parser.Model.Expressions;
 
-public class Literal {
+
+public abstract class Literal extends Expression {
+
+    Object Val;
+
 }

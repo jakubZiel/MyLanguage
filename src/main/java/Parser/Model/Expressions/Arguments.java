@@ -1,4 +1,18 @@
 package Parser.Model.Expressions;
 
-public class Arguments {
+import Parser.Model.Node;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class Arguments extends Node {
+    public List<Expression> arguments;
+
+    public Arguments() {
+        arguments = new LinkedList<>();
+    }
+
+    public void addArgument(Expression argument){
+        arguments.add(argument);
+    }
 }

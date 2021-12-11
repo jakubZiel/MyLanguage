@@ -15,7 +15,7 @@ import Lexer.Token;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DataSourceStringLexer {
+class DataSourceLineStringLexer {
     @Test
     void testStringSource() throws UnexpectedCharException, IOException {
 

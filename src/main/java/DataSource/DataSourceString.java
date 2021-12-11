@@ -1,6 +1,6 @@
 package DataSource;
 
-import static DataSource.DataSource.NULL;
+import static DataSource.DataSourceLine.NULL;
 
 public class DataSourceString implements IDataSource {
 

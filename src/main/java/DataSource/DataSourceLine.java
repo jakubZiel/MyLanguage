@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class DataSource implements IDataSource {
+public class DataSourceLine implements IDataSource {
 
     public static final char NULL = '\0';
     private final BufferedReader fileReader;
@@ -16,7 +16,7 @@ public class DataSource implements IDataSource {
     private String buffer;
     private String auxBuffer;
 
-    public DataSource(String filePath) throws IOException {
+    public DataSourceLine(String filePath) throws IOException {
         fileReader = Files.newBufferedReader(Paths.get(filePath));
         EOF = false;
     }

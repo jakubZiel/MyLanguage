@@ -1,4 +1,6 @@
 package Parser.Model.Instructions;
 
-public abstract class Instruction {
+import Parser.Model.Node;
+
+public abstract class Instruction extends Node {
 }

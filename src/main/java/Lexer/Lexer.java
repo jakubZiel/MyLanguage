@@ -2,7 +2,7 @@ package Lexer;
 
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
-import static DataSource.DataSource.NULL;
+import static DataSource.DataSourceLine.NULL;
 import static Lexer.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
