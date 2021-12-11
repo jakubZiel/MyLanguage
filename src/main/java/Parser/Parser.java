@@ -28,9 +28,9 @@ public class Parser {
         this.lexer = lexer;
     }
 
-    private Literal parseListDef() throws Exception {
+    private Expression parseListDef() throws Exception {
         Token opening = getToken();
-        if (peekToken().tokenIs(SQUARE_L)) {
+        if (peekToken().tokenIs(SQUARE_R)) {
             getToken();
             return new ListDef();
         }
@@ -141,13 +141,29 @@ public class Parser {
                 return parseReturnInstr();
             case IDENTIFIER:
                 return parseAssignInstr();
+            case LIST:
                 default:
-                    if (token.tokenIs(INT, DOUBLE, LIST)){
+                    if (token.tokenIs(INT, DOUBLE)){
                         return parseInitInstr();
                     } else
                         throw new ParserException("Expected instruction", token.position);
-
         }
+    }
+
+    private ListInitInstr parseListInitInstr() throws Exception {
+        ListT type = parseListType();
+        Token identifier = getToken();
+        Token next = getToken();
+        Expression initVal;
+
+        if (next.tokenIs(ASSIGN))
+            initVal = parseExpression();
+        else if (next.tokenIs(SEMICOLON))
+            initVal = null;
+        else
+            throw new ParserException("Unexpected token after init instruction", next.position);
+
+        return new ListInitInstr(type, identifier, initVal);
     }
 
     private InitInstr parseInitInstr() throws Exception {
@@ -294,6 +310,8 @@ public class Parser {
             case IDENTIFIER:
                 expression.addOperand(parseIdentified());
                 return expression;
+            case SQUARE_L:
+                return parseListDef();
             default:
                 return parseLiteral();
         }
@@ -352,8 +370,6 @@ public class Parser {
                 return parseNumber(-1);
             case NUMBER_T:
                 return parseNumber(1);
-            case SQUARE_L:
-                return parseListDef();
         }
 
         return new IntegerT((int) token.getValue());
@@ -400,7 +416,7 @@ public class Parser {
         String source = "((a * (a + 2)) * (2 + 3)) - (24) + 12)";
         String easyExpression = "(a + 3) * 2";
         String condition = "a + 3 < 3 || a > 0 && y < 10";
-        String functionCall = "helloWorld(f, 2 + 3, f, 4) !";
+        String functionCall = "helloWorld(f, 2 + 3, f, [1, 2, 3, 4 * g, 5]) !";
         String initInst = "int a = (a + 34) * 2 ";
         String assignInst = "a = (1234 * 3) + f";
         String returnInst = "return a * 123 + 3";
@@ -417,10 +433,12 @@ public class Parser {
 
         String parseListType = "list<list<list<int>>>";
         String parseListDef = "[1, 2, 3, 4 * g, 5]";
-        IDataSource ds = new DataSourceString(parseListDef);
+        String parseListInit = parseListType + "tab=" + parseListDef;
+
+        IDataSource ds = new DataSourceString(functionCall);
         Lexer lexer = new Lexer(ds);
         Parser parser = new Parser(lexer);
-        var cond = parser.parseListDef();
+        var cond = parser.parseFunctionCall();
 
 
         System.out.println(parser.getToken().type);
