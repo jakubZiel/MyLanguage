@@ -2,8 +2,9 @@ package Parser.Model.Statements;
 
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
+import Parser.Model.Instructions.Instruction;
 
-public class WhileStatement {
+public class WhileStatement extends Instruction {
     private Condition condition;
     private Block body;
 

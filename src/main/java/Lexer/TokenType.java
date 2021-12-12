@@ -22,7 +22,7 @@ public enum TokenType {
     RETURN,
     FOREACH,
     FILTER,
-    ELIF,
+    ELSEIF,
     ADD_LIST,
     REMOVE_LIST,
     PRINT,

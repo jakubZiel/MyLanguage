@@ -169,7 +169,7 @@ public class Lexer {
         KEYWORDS.put("while", WHILE);
         KEYWORDS.put("if", IF);
         KEYWORDS.put("else", ELSE);
-        KEYWORDS.put("elseif", ELIF);
+        KEYWORDS.put("elseif", ELSEIF);
         KEYWORDS.put("return", RETURN);
 
         KEYWORDS.put("list", LIST);
