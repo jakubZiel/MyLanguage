@@ -11,4 +11,12 @@ public class FunctionCall extends Instruction {
         this.identifier = (String) identifier.getValue();
         this.arguments = arguments;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionCall{" +
+                "identifier='" + identifier + '\'' +
+                ", arguments=" + arguments +
+                '}';
+    }
 }

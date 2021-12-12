@@ -11,8 +11,15 @@ public class Arguments extends Node {
     public Arguments() {
         arguments = new LinkedList<>();
     }
-
     public void addArgument(Expression argument){
         arguments.add(argument);
     }
+
+    @Override
+    public String toString() {
+        return "Arguments{" +
+                "arguments=" + arguments +
+                '}';
+    }
+
 }

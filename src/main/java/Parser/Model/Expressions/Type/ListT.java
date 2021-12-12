@@ -10,4 +10,12 @@ public class ListT {
         this.nesting = nesting;
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ListT{" +
+                "type=" + type +
+                ", nesting=" + nesting +
+                '}';
+    }
 }

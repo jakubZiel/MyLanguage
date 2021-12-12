@@ -17,4 +17,13 @@ public class ArrowExpression {
         this.argument = (String) argument.getValue();
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "ArrowExpression{" +
+                "argument='" + argument + '\'' +
+                ", expression=" + expression +
+                ", condition=" + condition +
+                '}';
+    }
 }

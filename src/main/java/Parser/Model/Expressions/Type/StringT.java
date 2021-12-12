@@ -9,4 +9,11 @@ public class StringT extends Literal {
     public StringT(Token token) {
         this.value = (String) token.getValue();
     }
+
+    @Override
+    public String toString() {
+        return "StringT{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }

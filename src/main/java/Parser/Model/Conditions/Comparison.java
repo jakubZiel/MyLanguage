@@ -2,7 +2,6 @@ package Parser.Model.Conditions;
 
 import Lexer.TokenType;
 import Parser.Model.Expressions.Expression;
-import Parser.Model.Node;
 
 public class Comparison extends Condition {
     TokenType operator;

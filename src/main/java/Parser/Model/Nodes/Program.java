@@ -10,4 +10,11 @@ public class Program {
     public Program(List<FunctionDeclaration> functions){
         this.functions = functions;
     }
+
+    @Override
+    public String toString() {
+        return "Program{" +
+                "functions=" + functions +
+                '}';
+    }
 }

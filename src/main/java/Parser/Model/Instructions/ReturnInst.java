@@ -9,4 +9,11 @@ public class ReturnInst extends Instruction {
     public ReturnInst(Expression returned) {
         this.returned = returned;
     }
+
+    @Override
+    public String toString() {
+        return "ReturnInst{" +
+                "returned=" + returned +
+                '}';
+    }
 }

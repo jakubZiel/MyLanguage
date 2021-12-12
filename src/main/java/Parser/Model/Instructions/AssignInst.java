@@ -10,6 +10,14 @@ public class AssignInst extends Instruction{
         this.assingedValue = assingedValue;
         this.identifier = (String) identifier.getValue();
     }
+
+    @Override
+    public String toString() {
+        return "AssignInst{" +
+                "identifier='" + identifier + '\'' +
+                ", assingedValue=" + assingedValue +
+                '}';
+    }
 }
 
 

@@ -8,4 +8,11 @@ public class DoubleT extends Literal {
     public DoubleT(double val) {
         this.val = val;
     }
+
+    @Override
+    public String toString() {
+        return "DoubleT{" +
+                "val=" + val +
+                '}';
+    }
 }

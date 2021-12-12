@@ -20,4 +20,15 @@ public class IfStatement extends Instruction {
         this.elseIfBodies = elseIfBodies;
         this.elseBlock = elseBlock;
     }
+
+    @Override
+    public String toString() {
+        return "IfStatement{" +
+                "condition=" + condition +
+                ", block=" + block +
+                ", elseIfConditions=" + elseIfConditions +
+                ", elseIfBodies=" + elseIfBodies +
+                ", elseBlock=" + elseBlock +
+                '}';
+    }
 }

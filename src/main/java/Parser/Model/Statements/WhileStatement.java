@@ -12,4 +12,12 @@ public class WhileStatement extends Instruction {
         this.body = body;
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "WhileStatement{" +
+                "condition=" + condition +
+                ", body=" + body +
+                '}';
+    }
 }

@@ -14,4 +14,13 @@ public class InitInstr extends Instruction{
         this.identifier = (String) identifier.getValue();
         this.assignedValue = assignedValue;
     }
+
+    @Override
+    public String toString() {
+        return "InitInstr{" +
+                "type=" + type +
+                ", identifier='" + identifier + '\'' +
+                ", assignedValue=" + assignedValue +
+                '}';
+    }
 }

@@ -11,4 +11,11 @@ public class ListInitInstr extends InitInstr{
         super(null, identifier, assignedValue);
         nestedType = type;
     }
+
+    @Override
+    public String toString() {
+        return "ListInitInstr{" +
+                "nestedType=" + nestedType +
+                '}';
+    }
 }

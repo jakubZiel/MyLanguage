@@ -15,4 +15,15 @@ public class FunctionDeclaration {
         this.returnedType = returnedType;
         this.body = body;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionDeclaration{" +
+                "returnedType=" + returnedType +
+                ", identifier='" + identifier + '\'' +
+                ", parameters=" + parameters +
+                ", body=" + body +
+                '}';
+    }
 }
+

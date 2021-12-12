@@ -59,8 +59,7 @@ public class Parser {
         }
         Parameters parameters = new Parameters();
         parameters.addSignature(parseSignature());
-        Token token;
-        while ((token = peekToken()).type == COMA){
+        while (peekToken().type == COMA){
             getToken();
             parameters.addSignature(parseSignature());
         }
@@ -390,19 +389,19 @@ public class Parser {
 
     }
 
-    private ArrowExpression parseArrowExpression() throws Exception {
+    public ArrowExpression parseArrowExpression() throws Exception {
         match(getToken(), PAREN_L, "Expected (");
         Token identifier = getToken();
-        match(getToken(), ARROW, "Expected '=>'");
+        match(getToken(), ARROW, "Expected '->'");
         Expression expression = parseExpression();
-        match(getToken(), PAREN_R, "Expected (");
+        match(getToken(), PAREN_R, "Expected )");
         return new ArrowExpression(identifier, expression);
     }
 
-    private ArrowExpression parseArrowPredicate() throws Exception{
+    public ArrowExpression parseArrowPredicate() throws Exception{
         match(getToken(), PAREN_L, "Expected (");
         Token identifier = getToken();
-        match(getToken(), ARROW, "Expected '=>'");
+        match(getToken(), ARROW, "Expected '->'");
         Condition condition = parseCondition();
         match(getToken(), PAREN_R, "Expected (");
         return new ArrowExpression(identifier, condition);
@@ -487,11 +486,10 @@ public class Parser {
     }
 
     public static void main(String[] args) throws Exception {
-
+        String expression = "(a + 3) * 3";
         String ifStatement = "if(a < 3 && a > 2 || u < 10){ int b = 123;} elseif(a < 3){ if(a > 23){double u = 123;}; }elseif(b < 3){int u = 123;}else {int k = 123;}";
         String returnInst = "return a * 123 + 3";
         String parseListType = "list<list<list<int>>>";
-        String listOfStrings = "[\"hello\", \"world\"]";
         String parseListDef = "[1, 2, 3, 4 * g, 5]";
         String parseListInit = parseListType + "tab=" + parseListDef;
         String blockOfInstructions = "{" +
@@ -507,11 +505,10 @@ public class Parser {
         String functionDeclaration = "int helloWorld" + parameters + "{" + whileStatement +";" + returnInst + ";}";
         String program = functionDeclaration + functionDeclaration + functionDeclaration;
 
-        IDataSource ds = new DataSourceString(program);
+        IDataSource ds = new DataSourceString(expression);
         Lexer lexer = new Lexer(ds);
         Parser parser = new Parser(lexer);
-        var cond = parser.parseProgram();
-
+        var cond = parser.parseExpression();
 
         System.out.println(parser.getToken().type);
 

@@ -5,10 +5,18 @@ import Lexer.TokenType;
 
 public class Signature {
     private TokenType type;
-    private String identfiier;
+    private String identifier;
 
-    public Signature(TokenType type, Token identfiier) {
+    public Signature(TokenType type, Token identifier) {
         this.type = type;
-        this.identfiier = (String) identfiier.getValue();
+        this.identifier = (String) identifier.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Signature{" +
+                "type=" + type +
+                ", identifier='" + identifier + '\'' +
+                '}';
     }
 }

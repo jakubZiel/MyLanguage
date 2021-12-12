@@ -22,4 +22,12 @@ public class Expression extends Node{
         operators.add(operator);
     }
     public int operands(){return operands.size();}
+
+    @Override
+    public String toString() {
+        return "Expression{" +
+                "operands=" + operands +
+                ", operators=" + operators +
+                '}';
+    }
 }

@@ -16,4 +16,16 @@ public class ListDef extends Literal {
         this.elements = elements;
     }
 
+    @Override
+    public String toString() {
+        return "ListDef{" +
+                "elementsType=" + elementsType +
+                ", elements=" + elements +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        ListDef def = new ListDef();
+
+    }
 }
