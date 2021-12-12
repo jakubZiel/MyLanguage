@@ -74,9 +74,8 @@ public class Parser {
             match(peekToken(), IDENTIFIER, "Expected identifier");
             Token identifier = getToken();
             return new Signature(type.type, identifier);
-        } else{
-            return null;
-        }
+        } else
+            throw new ParserException("Expected type INT, DOUBLE, LIST", type.position);
     }
 
     private Block parseBlock() throws Exception {
@@ -253,8 +252,6 @@ public class Parser {
             throw new ParserException("Expected comparison operatar", token.position);
     }
 
-
-
     private Expression parseExpression() throws Exception {
         Expression expression = new Expression();
         Expression left = parseMultExpr();
@@ -367,7 +364,7 @@ public class Parser {
         Token nextToken = peekToken();
         switch (nextToken.type){
             case DOT:
-
+                return parseListOpp(identifier);
             case SQUARE_L:
                 getToken();
                 Expression index = parseExpression();
@@ -375,18 +372,45 @@ public class Parser {
                 getToken();
                 return new ArrayCall(identifier, index);
             case PAREN_L:
-                return parseFunctionCall();
+                return parseFunctionCall(identifier);
             default:
                 return new Identifier(identifier);
         }
     }
 
-    private ListOppCall parseFunctionOpp(){
-        return null;
+    private ListOppCall parseListOpp(Token identifier) throws Exception {
+        Token dot = getToken();
+        Token operation = getToken();
+
+        if (operation.tokenIs(FOREACH, ADD_LIST, REMOVE_LIST)){
+            return new ListOppCall(identifier, operation, parseArrowExpression());
+        } else if (operation.tokenIs(FILTER))
+            return new ListOppCall(identifier, operation, parseArrowPredicate());
+            throw new ParserException("Expected function operation", operation.position);
+
     }
 
-    private FunctionCall parseFunctionCall() throws Exception {
+    private ArrowExpression parseArrowExpression() throws Exception {
+        match(getToken(), PAREN_L, "Expected (");
         Token identifier = getToken();
+        match(getToken(), ARROW, "Expected '=>'");
+        Expression expression = parseExpression();
+        match(getToken(), PAREN_R, "Expected (");
+        return new ArrowExpression(identifier, expression);
+    }
+
+    private ArrowExpression parseArrowPredicate() throws Exception{
+        match(getToken(), PAREN_L, "Expected (");
+        Token identifier = getToken();
+        match(getToken(), ARROW, "Expected '=>'");
+        Condition condition = parseCondition();
+        match(getToken(), PAREN_R, "Expected (");
+        return new ArrowExpression(identifier, condition);
+    }
+
+
+    private FunctionCall parseFunctionCall(Token identifier) throws Exception {
+        Token opening = getToken();
         Arguments arguments = parseArguments();
         return new FunctionCall(identifier, arguments);
     }
@@ -422,7 +446,6 @@ public class Parser {
             case STRING_T:
                 return parseString();
         }
-
         return new IntegerT((int) token.getValue());
     }
 
@@ -464,12 +487,7 @@ public class Parser {
     }
 
     public static void main(String[] args) throws Exception {
-        String source = "((a * (a + 2)) * (2 + 3)) - (24) + 12)";
-        String easyExpression = "(a + 3) * 2";
-        String condition = "a + 3 < 3 || a > 0 && y < 10";
-        String functionCall = "helloWorld(f, 2 + 3, f, [1, 2, 3, 4 * g, 5]) !";
-        String initInst = "int a = (a + 34) * 2 ";
-        String assignInst = "a = (1234 * 3) + f";
+
         String ifStatement = "if(a < 3 && a > 2 || u < 10){ int b = 123;} elseif(a < 3){ if(a > 23){double u = 123;}; }elseif(b < 3){int u = 123;}else {int k = 123;}";
         String returnInst = "return a * 123 + 3";
         String parseListType = "list<list<list<int>>>";
