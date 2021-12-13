@@ -306,8 +306,7 @@ public class Parser {
     }
 
     protected Expression parseBaseExpr() throws Exception {
-        Token token = peekToken(0)
-;
+        Token token = peekToken(0);
         switch (token.type){
             case PAREN_L:
                 getToken();
@@ -363,8 +362,7 @@ public class Parser {
 
     protected Expression parseIdentified() throws Exception {
         Token identifier = getToken();
-        Token nextToken = peekToken(0)
-;
+        Token nextToken = peekToken(0);
         switch (nextToken.type){
             case DOT:
                 return parseListOpp(identifier);
@@ -433,9 +431,7 @@ public class Parser {
     }
 
     protected Literal parseLiteral() throws Exception {
-
-        Token token = peekToken(0)
-;
+        Token token = peekToken(0);
         switch (token.type){
             case ADD:
                 getToken();
