@@ -180,12 +180,10 @@ public class Parser {
                     throw new ParserException("if statement error", token.position);
             }
         }
-
         return new IfStatement(condition, block, elifConditions, elifBlocks, elseBlock);
     }
 
     protected WhileStatement parseWhileStatement() throws Exception {
-
         Token whileToken = getToken();
         match(getToken(), PAREN_L, "Expected '(");
         Condition condition = parseCondition();
@@ -346,13 +344,13 @@ public class Parser {
     }
 
     protected int checkListNesting(Token type) throws Exception {
-        Token list = getToken();
-        Token opening = getToken();
-        Token closing;
+        match(getToken(), LIST, "list type expected");
+        match(getToken(), ANGLE_L, "list type opening expected");
+
         int nesting;
         if (peekToken().tokenIs(INT, DOUBLE)) {
             type.type = getToken().type;
-            closing = getToken();
+            match(getToken(), ANGLE_R,"Unclosed list type");
             return 1;
         } else
             nesting = checkListNesting(type) + 1;
@@ -388,7 +386,8 @@ public class Parser {
             return new ListOppCall(identifier, operation, parseArrowExpression());
         } else if (operation.tokenIs(FILTER))
             return new ListOppCall(identifier, operation, parseArrowPredicate());
-            throw new ParserException("Expected function operation", operation.position);
+
+        throw new ParserException("Expected function operation", operation.position);
 
     }
 
