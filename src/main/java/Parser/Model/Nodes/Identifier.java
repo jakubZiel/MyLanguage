@@ -1,9 +1,10 @@
 package Parser.Model.Nodes;
 
 import Lexer.Token;
+import Parser.Model.Expressions.Expression;
 import Parser.Model.Node;
 
-public class Identifier extends Node {
+public class Identifier extends Expression {
     private String name;
 
     public Identifier(String name) {

@@ -1,9 +1,8 @@
-package Parser.Model.Instructions;
+package Parser.Model.Expressions;
 
 import Lexer.Token;
-import Parser.Model.Expressions.Arguments;
 
-public class FunctionCall extends Instruction {
+public class FunctionCall extends Expression {
     private String identifier;
     private Arguments arguments;
 

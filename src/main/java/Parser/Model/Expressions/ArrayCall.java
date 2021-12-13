@@ -1,9 +1,8 @@
 package Parser.Model.Expressions;
 
 import Lexer.Token;
-import Parser.Model.Node;
 
-public class ArrayCall extends Node {
+public class ArrayCall extends Expression {
     String identifier;
     Expression index;
 

@@ -1,10 +1,9 @@
-package Parser.Model.Instructions;
+package Parser.Model.Expressions;
 
 import Lexer.Token;
 import Lexer.TokenType;
-import Parser.Model.Expressions.ArrowExpression;
 
-public class ListOppCall extends Instruction{
+public class ListOppCall extends Expression {
     private String identifier;
     private TokenType operation;
     private ArrowExpression arrowExpression;
