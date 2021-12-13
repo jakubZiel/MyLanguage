@@ -23,9 +23,4 @@ public class ListDef extends Literal {
                 ", elements=" + elements +
                 '}';
     }
-
-    public static void main(String[] args) {
-        ListDef def = new ListDef();
-
-    }
 }

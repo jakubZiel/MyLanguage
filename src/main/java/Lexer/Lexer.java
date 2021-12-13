@@ -1,5 +1,6 @@
 package Lexer;
 
+import DataSource.DataSourceString;
 import ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSourceLine.NULL;
@@ -12,14 +13,13 @@ import DataSource.Position;
 
 public class Lexer {
     private IDataSource dataSource;
-    private final ArrayList<Token> tokens;
+
     public static final HashMap<String, TokenType> KEYWORDS;
     public static final HashMap<String, TokenType> SINGLE_SPECIAL;
     public static final HashMap<String, TokenType> DOUBLE_SPECIAL;
 
     public Lexer(IDataSource dataSource) {
         this.dataSource = dataSource;
-        tokens = new ArrayList<>();
     }
     public Token scanToken() throws RuntimeException, IOException, UnexpectedCharException {
         if (dataSource.isEOF())
@@ -138,6 +138,11 @@ public class Lexer {
 
     public void setDataSource(IDataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public static Lexer lexerFactory(String source){
+        IDataSource dataSource = new DataSourceString(source);
+        return new Lexer(dataSource);
     }
 
     static {

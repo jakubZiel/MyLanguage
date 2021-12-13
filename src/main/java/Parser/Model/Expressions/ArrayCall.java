@@ -4,11 +4,19 @@ import Lexer.Token;
 import Parser.Model.Node;
 
 public class ArrayCall extends Node {
-    String name;
+    String identifier;
     Expression index;
 
     public ArrayCall(Token token, Expression index) {
-        this.name = (String) token.getValue();
+        this.identifier = (String) token.getValue();
         this.index = index;
+    }
+
+    @Override
+    public String toString() {
+        return "ArrayCall{" +
+                "identifier='" + identifier + '\'' +
+                ", index=" + index +
+                '}';
     }
 }

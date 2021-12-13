@@ -1,12 +1,8 @@
 package Parser.Model.Instructions;
 
-import DataSource.DataSourceString;
-import DataSource.IDataSource;
-import Lexer.Lexer;
 import Lexer.Token;
 import Lexer.TokenType;
 import Parser.Model.Expressions.ArrowExpression;
-import Parser.Parser;
 
 public class ListOppCall extends Instruction{
     private String identifier;
@@ -26,16 +22,5 @@ public class ListOppCall extends Instruction{
                 ", operation=" + operation +
                 ", arrowExpression=" + arrowExpression +
                 '}';
-    }
-
-    public static void main(String[] args) throws Exception {
-        IDataSource ds = new DataSourceString("(x ->  x * x )");
-        Lexer lexer  = new Lexer(ds);
-        Parser parser = new Parser(lexer);
-
-        var expression = parser.parseArrowExpression();
-
-
-
     }
 }

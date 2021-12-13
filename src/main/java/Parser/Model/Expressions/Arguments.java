@@ -21,5 +21,4 @@ public class Arguments extends Node {
                 "arguments=" + arguments +
                 '}';
     }
-
 }

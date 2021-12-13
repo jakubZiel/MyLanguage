@@ -21,4 +21,13 @@ public class Condition extends Node {
     public void addOperator(TokenType operator){
         operators.add(operator);
     }
+    public int conditions() { return conditions.size();}
+
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "conditions=" + conditions +
+                ", operators=" + operators +
+                '}';
+    }
 }

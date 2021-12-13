@@ -14,11 +14,12 @@ public class Comparison extends Condition {
         this.right = right;
     }
 
-    public void setLeft(Expression left) {
-        this.left = left;
-    }
-
-    public void setRight(Expression right) {
-        this.right = right;
+    @Override
+    public String toString() {
+        return "Comparison{" +
+                "operator=" + operator +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
     }
 }
