@@ -17,6 +17,7 @@ import java.util.List;
 
 public class Parser {
     private final Lexer lexer;
+    private final List<Token> peekedTokens;
 
     public Parser (Lexer lexer){
         this.lexer = lexer;
@@ -465,8 +466,6 @@ public class Parser {
         Token string = getToken();
         return new StringT(string);
     }
-
-    List<Token> peekedTokens;
 
     protected Token peekToken(int offset) throws Exception {
         if (offset <= peekedTokens.size() - 1)
