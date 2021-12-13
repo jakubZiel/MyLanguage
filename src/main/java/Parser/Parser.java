@@ -278,16 +278,9 @@ public class Parser {
 
         Token token;
         while ((token = peekToken(0)).tokenIs(ADD, SUBTRACT)){
-            switch (token.type){
-                case ADD:
-                case SUBTRACT:
-                    getToken();
-                    expression.addOperator(token.type);
-                    expression.addOperand(parseMultExpr());
-                    break;
-                default:
-                    throw new ParserException("Expected + or -", token.position);
-            }
+            getToken();
+            expression.addOperator(token.type);
+            expression.addOperand(parseMultExpr());
         }
         if (expression.operands() == 1)
             return left;
@@ -302,20 +295,12 @@ public class Parser {
 
         Token token;
         while ((token = peekToken(0)).tokenIs(MULTIPLY, DIVIDE, MODULO)){
-            switch (token.type){
-                case MULTIPLY:
-                case DIVIDE:
-                    getToken();
-                    expression.addOperator(token.type);
-                    expression.addOperand(parseBaseExpr());
-                    break;
-                default:
-                    throw new ParserException("Expected %, /, *", token.position);
-            }
+            getToken();
+            expression.addOperator(token.type);
+            expression.addOperand(parseBaseExpr());
         }
         if (expression.operands() == 1)
             return left;
-
         return expression;
     }
 
