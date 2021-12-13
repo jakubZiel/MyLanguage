@@ -1,9 +1,6 @@
 package Parser;
 
-import DataSource.DataSourceString;
-import DataSource.IDataSource;
 import ExceptionHandler.Exceptions.ParserException;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
 import Lexer.Token;
 import Lexer.Lexer;
 import static Lexer.TokenType.*;
@@ -15,9 +12,6 @@ import Parser.Model.Instructions.*;
 import Parser.Model.Expressions.Type.*;
 import Parser.Model.Nodes.*;
 import Parser.Model.Statements.*;
-
-import java.io.IOException;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,20 +28,17 @@ public class Parser {
     public Program parseProgram() throws Exception {
         List<FunctionDeclaration> functions = new LinkedList<>();
 
-        while(!peekToken(0)
-.tokenIs(END_T)) {
+        while(!peekToken(0).tokenIs(END_T)) {
             functions.add(parseFunctionDeclaration());
         }
         return new Program(functions);
     }
 
     protected FunctionDeclaration parseFunctionDeclaration() throws Exception {
-        Token token = peekToken(0)
-;
+        Token token = peekToken(0);
         if (token.tokenIs(INT, DOUBLE, VOID)){
             getToken();
-            match(peekToken(0)
-, IDENTIFIER, "Expected function name");
+            match(peekToken(0), IDENTIFIER, "Expected function name");
             Token identifier = getToken();
             Parameters parameters = parseParameters();
             Block body = parseBlock();
@@ -59,15 +50,13 @@ public class Parser {
     protected Parameters parseParameters() throws Exception {
         Token opening = getToken();
 
-        if (peekToken(0)
-.tokenIs(PAREN_R)){
+        if (peekToken(0).tokenIs(PAREN_R)){
             getToken();
             return new Parameters();
         }
         Parameters parameters = new Parameters();
         parameters.addSignature(parseSignature());
-        while (peekToken(0)
-.type == COMA){
+        while (peekToken(0).type == COMA){
             getToken();
             parameters.addSignature(parseSignature());
         }
@@ -78,8 +67,7 @@ public class Parser {
     protected Signature parseSignature() throws Exception {
         Token type = getToken();
         if (type.tokenIs(INT, DOUBLE, LIST)){
-            match(peekToken(0)
-, IDENTIFIER, "Expected identifier");
+            match(peekToken(0), IDENTIFIER, "Expected identifier");
             Token identifier = getToken();
             return new Signature(type.type, identifier);
         } else
@@ -92,8 +80,7 @@ public class Parser {
 
         Block block = new Block();
 
-        while (!peekToken(0)
-.tokenIs(CURLY_R) ){
+        while (!peekToken(0).tokenIs(CURLY_R) ){
             addStatement(block);
             match(getToken(), SEMICOLON, "Expected  ';' after instruction");
         }
@@ -102,8 +89,7 @@ public class Parser {
     }
 
     protected void addStatement(Block block) throws Exception {
-        switch (peekToken(0)
-.type){
+        switch (peekToken(0).type){
             case IF:
                 block.addInstruction(parseIfStatement());
                 break;
@@ -122,7 +108,7 @@ public class Parser {
             case RETURN:
                 return parseReturnInstr();
             case IDENTIFIER:
-                return parseAssignInstr();
+                return parseIdentifierInstr();
             case LIST:
                 return parseListInitInstr();
             default:
@@ -130,6 +116,24 @@ public class Parser {
                     return parseInitInstr();
                 } else
                     throw new ParserException("Expected instruction", token.position);
+        }
+    }
+
+    protected Instruction parseIdentifierInstr() throws Exception {
+        Token nextToken = peekToken(1);
+
+        if (nextToken.type == ASSIGN){
+            return parseAssignInstr();
+        }
+        switch (nextToken.type){
+            case DOT:
+                return new CallInstr((ListOppCall) parseIdentified());
+            case SQUARE_L:
+                return new CallInstr((ArrayCall) parseIdentified());
+            case PAREN_L:
+                return new CallInstr((FunctionCall) parseIdentified());
+            default:
+                throw new ParserException("Wrong instruction", nextToken.position);
         }
     }
 
@@ -177,8 +181,7 @@ public class Parser {
         List<Condition> elifConditions = new LinkedList<>();
         List<Block> elifBlocks = new LinkedList<>();
 
-        while (!elseFound && peekToken(0)
-.tokenIs(ELSE, ELSEIF)){
+        while (!elseFound && peekToken(0).tokenIs(ELSE, ELSEIF)){
             Token token = getToken();
             switch (token.type){
                 case ELSEIF:
@@ -209,8 +212,7 @@ public class Parser {
     }
 
     protected ReturnInst parseReturnInstr() throws Exception {
-        match(peekToken(0)
-, RETURN, "Expected 'return' ");
+        match(peekToken(0), RETURN, "Expected 'return' ");
         getToken();
         return new ReturnInst(parseExpression());
     }
@@ -228,8 +230,7 @@ public class Parser {
         Condition left = parseAndCond();
         condition.addOperand(left);
 
-        while (peekToken(0)
-.type == OR){
+        while (peekToken(0).type == OR){
             condition.addOperator(OR);
             getToken();
             condition.addOperand(parseAndCond());
@@ -246,8 +247,7 @@ public class Parser {
         Condition left = parseBaseCond();
         condition.addOperand(left);
 
-        while (peekToken(0)
-.type == AND){
+        while (peekToken(0).type == AND){
             condition.addOperator(AND);
             getToken();
             condition.addOperand(parseBaseCond());
@@ -278,8 +278,7 @@ public class Parser {
         expression.addOperand(left);
 
         Token token;
-        while ((token = peekToken(0)
-).tokenIs(ADD, SUBTRACT)){
+        while ((token = peekToken(0)).tokenIs(ADD, SUBTRACT)){
             switch (token.type){
                 case ADD:
                 case SUBTRACT:
@@ -303,8 +302,7 @@ public class Parser {
         expression.addOperand(left);
 
         Token token;
-        while ((token = peekToken(0)
-).tokenIs(MULTIPLY, DIVIDE, MODULO)){
+        while ((token = peekToken(0)).tokenIs(MULTIPLY, DIVIDE, MODULO)){
             switch (token.type){
                 case MULTIPLY:
                 case DIVIDE:
@@ -343,15 +341,13 @@ public class Parser {
 
     protected Expression parseListDef() throws Exception {
         Token opening = getToken();
-        if (peekToken(0)
-.tokenIs(SQUARE_R)) {
+        if (peekToken(0).tokenIs(SQUARE_R)) {
             getToken();
             return new ListDef();
         }
         List<Expression> elements = new LinkedList<>();
         elements.add(parseExpression());
-        while (peekToken(0)
-.tokenIs(COMA)) {
+        while (peekToken(0).tokenIs(COMA)) {
             getToken();
             elements.add(parseExpression());
         }
@@ -369,8 +365,7 @@ public class Parser {
         match(getToken(), ANGLE_L, "list type opening expected");
 
         int nesting;
-        if (peekToken(0)
-.tokenIs(INT, DOUBLE)) {
+        if (peekToken(0).tokenIs(INT, DOUBLE)) {
             type.type = getToken().type;
             match(getToken(), ANGLE_R,"Unclosed list type");
             return 1;
@@ -391,8 +386,7 @@ public class Parser {
             case SQUARE_L:
                 getToken();
                 Expression index = parseExpression();
-                match(peekToken(0)
-, SQUARE_R, "Expected ]");
+                match(peekToken(0), SQUARE_R, "Expected ]");
                 getToken();
                 return new ArrayCall(identifier, index);
             case PAREN_L:
@@ -441,15 +435,13 @@ public class Parser {
 
     protected Arguments parseArguments() throws Exception {
         Token opening = getToken();
-        if (peekToken(0)
-.tokenIs(PAREN_R)) {
+        if (peekToken(0).tokenIs(PAREN_R)) {
             getToken();
             return new Arguments();
         }
         Arguments arguments = new Arguments();
         arguments.addArgument(parseExpression());
-        while (peekToken(0)
-.tokenIs(COMA)) {
+        while (peekToken(0).tokenIs(COMA)) {
             getToken();
             arguments.addArgument(parseExpression());
         }
@@ -492,13 +484,6 @@ public class Parser {
         return new StringT(string);
     }
 
-    protected Token peekToken() throws Exception {
-        if (peeked == null){
-            peeked = lexer.scanToken();
-        }
-        return peeked;
-    }
-
     List<Token> peekedTokens;
 
     protected Token peekToken(int offset) throws Exception {
@@ -521,5 +506,4 @@ public class Parser {
         if (token.type != type)
             throw new ParserException(errMsg, token.position);
     }
-
 }
