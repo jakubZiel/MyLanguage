@@ -119,6 +119,20 @@ public class Parser {
         }
     }
 
+    protected ReturnInst parseReturnInstr() throws Exception {
+        match(peekToken(0), RETURN, "Expected 'return' ");
+        getToken();
+        return new ReturnInst(parseExpression());
+    }
+
+    protected AssignInst parseAssignInstr() throws Exception{
+        Token identifier = getToken();
+        match(getToken(), ASSIGN, "Expected  assignment token");
+        Expression assignedValue = parseExpression();
+
+        return new AssignInst(identifier, assignedValue);
+    }
+
     protected Instruction parseIdentifierInstr() throws Exception {
         Token nextToken = peekToken(1);
 
@@ -209,20 +223,6 @@ public class Parser {
 
         Block body = parseBlock();
         return new WhileStatement(condition, body);
-    }
-
-    protected ReturnInst parseReturnInstr() throws Exception {
-        match(peekToken(0), RETURN, "Expected 'return' ");
-        getToken();
-        return new ReturnInst(parseExpression());
-    }
-
-    protected AssignInst parseAssignInstr() throws Exception{
-        Token identifier = getToken();
-        match(getToken(), ASSIGN, "Expected  assignment token");
-        Expression assignedValue = parseExpression();
-
-        return new AssignInst(identifier, assignedValue);
     }
 
     protected Condition parseCondition() throws Exception {
