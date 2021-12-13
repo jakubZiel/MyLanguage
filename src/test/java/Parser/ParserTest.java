@@ -52,6 +52,9 @@ class ParserTest {
                 "int a = (a + 34) * 2;" +
                 "a = (1234 * 3) + f;" +
                 ifStatement + ";" +
+                "uf(a, u, 12) ;" +
+                "tab[23] = funny(123);" +
+                "t = tab3.filter(x -> x * 2 < 12);" +
                 parseListInit + ";" +
                 "return a * 123 + 3;" +
                 "}";

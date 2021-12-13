@@ -15,9 +15,7 @@ import Parser.Model.Statements.*;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class Parser {
-    private Token peeked;
     private final Lexer lexer;
 
     public Parser (Lexer lexer){
@@ -102,8 +100,7 @@ public class Parser {
     }
 
     protected Instruction parseInstruction() throws Exception {
-        Token token = peekToken(0)
-;
+        Token token = peekToken(0);
         switch (token.type){
             case RETURN:
                 return parseReturnInstr();
@@ -120,8 +117,7 @@ public class Parser {
     }
 
     protected ReturnInst parseReturnInstr() throws Exception {
-        match(peekToken(0), RETURN, "Expected 'return' ");
-        getToken();
+        match(getToken(), RETURN, "Expected 'return' ");
         return new ReturnInst(parseExpression());
     }
 
@@ -143,7 +139,10 @@ public class Parser {
             case DOT:
                 return new CallInstr((ListOppCall) parseIdentified());
             case SQUARE_L:
-                return new CallInstr((ArrayCall) parseIdentified());
+                ArrayCall arrayCall = (ArrayCall) parseIdentified();
+                match(getToken(), ASSIGN, "Expected = ");
+                arrayCall.setAssignedValue(parseExpression());
+                return new CallInstr(arrayCall);
             case PAREN_L:
                 return new CallInstr((FunctionCall) parseIdentified());
             default:
@@ -406,7 +405,6 @@ public class Parser {
             return new ListOppCall(identifier, operation, parseArrowPredicate());
 
         throw new ParserException("Expected function operation", operation.position);
-
     }
 
     protected ArrowExpression parseArrowExpression() throws Exception {
@@ -426,7 +424,6 @@ public class Parser {
         match(getToken(), PAREN_R, "Expected (");
         return new ArrowExpression(identifier, condition);
     }
-
 
     protected FunctionCall parseFunctionCall(Token identifier) throws Exception {
         Arguments arguments = parseArguments();
