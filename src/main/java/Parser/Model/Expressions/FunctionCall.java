@@ -1,13 +1,14 @@
 package Parser.Model.Expressions;
 
-import Lexer.Token;
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 
 public class FunctionCall extends Expression {
     private String identifier;
     private Arguments arguments;
 
-    public FunctionCall(Token identifier, Arguments arguments) {
-        this.identifier = (String) identifier.getValue();
+    public FunctionCall(String identifier, Arguments arguments) {
+        this.identifier = identifier;
         this.arguments = arguments;
     }
 
@@ -17,5 +18,18 @@ public class FunctionCall extends Expression {
                 "identifier='" + identifier + '\'' +
                 ", arguments=" + arguments +
                 '}';
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public Arguments getArguments(){
+        return arguments;
+    }
+
+    @Override
+    public Object accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

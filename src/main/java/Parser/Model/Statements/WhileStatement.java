@@ -1,5 +1,7 @@
 package Parser.Model.Statements;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
 import Parser.Model.Instructions.Instruction;
@@ -19,5 +21,13 @@ public class WhileStatement extends Instruction {
                 "condition=" + condition +
                 ", body=" + body +
                 '}';
+    }
+
+    public Block getBody() {
+        return body;
+    }
+
+    public Condition getCondition() {
+        return condition;
     }
 }

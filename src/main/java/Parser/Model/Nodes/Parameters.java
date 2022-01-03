@@ -20,4 +20,8 @@ public class Parameters {
                 "signatures=" + signatures +
                 '}';
     }
+
+    public List<Signature> getSignatures() {
+        return signatures;
+    }
 }

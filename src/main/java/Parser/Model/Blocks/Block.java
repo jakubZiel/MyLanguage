@@ -25,4 +25,7 @@ public class Block {
                 '}';
     }
 
+    public List<Instruction> getInstructions() {
+        return instructions;
+    }
 }

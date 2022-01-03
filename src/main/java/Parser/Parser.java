@@ -225,7 +225,7 @@ public class Parser {
         return new WhileStatement(condition, body);
     }
 
-    protected Condition parseCondition() throws Exception {
+    public Condition parseCondition() throws Exception {
         Condition condition = new Condition();
         Condition left = parseAndCond();
         condition.addOperand(left);
@@ -259,7 +259,7 @@ public class Parser {
         return condition;
     }
 
-    protected Condition parseBaseCond() throws Exception {
+    public Condition parseBaseCond() throws Exception {
         Expression left = parseExpression();
 
         Token token = peekToken(0)
@@ -272,7 +272,7 @@ public class Parser {
             throw new ParserException("Expected comparison operatar", token.position);
     }
 
-    protected Expression parseExpression() throws Exception {
+    public Expression parseExpression() throws Exception {
         Expression expression = new Expression();
         Expression left = parseMultExpr();
         expression.addOperand(left);
@@ -411,7 +411,7 @@ public class Parser {
 
     protected FunctionCall parseFunctionCall(Token identifier) throws Exception {
         Arguments arguments = parseArguments();
-        return new FunctionCall(identifier, arguments);
+        return new FunctionCall((String) identifier.getValue(), arguments);
     }
 
     protected Arguments parseArguments() throws Exception {

@@ -1,12 +1,13 @@
 package Parser.Model.Conditions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Scope;
 import Lexer.TokenType;
-import Parser.Model.Node;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Condition extends Node {
+public class Condition {
     private List<Condition> conditions;
     private List<TokenType> operators;
 
@@ -30,4 +31,26 @@ public class Condition extends Node {
                 ", operators=" + operators +
                 '}';
     }
+
+    public boolean execute(Scope scope) throws InterpreterException {
+        var condIter = conditions.iterator();
+        var operatorIter = operators.iterator();
+
+        boolean result = condIter.next().execute(scope);
+
+        while (operatorIter.hasNext()) {
+            switch(operatorIter.next()){
+                case OR:
+                    result = result || condIter.next().execute(scope);
+                    break;
+                case AND:
+                    if (result)
+                        result = condIter.next().execute(scope);
+                    else
+                        return false;
+            }
+        }
+        return result;
+    }
 }
+

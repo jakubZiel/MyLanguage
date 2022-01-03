@@ -52,7 +52,7 @@ class ParserTest {
                 "int a = (a + 34) * 2;" +
                 "a = (1234 * 3) + f;" +
                 ifStatement + ";" +
-                "uf(a, u, 12) ;" +
+                "uf(a[12], u, 12) ;" +
                 "tab[23] = funny(123);" +
                 "t = tab3.filter(x -> x * 2 < 12);" +
                 parseListInit + ";" +
@@ -92,7 +92,7 @@ class ParserTest {
     void parseExpression() throws Exception {
         String data = "(a + 3) + (3 + k) * 3";
         Parser parser = new Parser(Lexer.lexerFactory(data));
-        parser.parseExpression();
+        var exp = parser.parseExpression();
     }
 
     @Test

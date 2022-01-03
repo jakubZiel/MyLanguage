@@ -10,6 +10,10 @@ public class ReturnInst extends Instruction {
         this.returned = returned;
     }
 
+    public Expression getReturned() {
+        return returned;
+    }
+
     @Override
     public String toString() {
         return "ReturnInst{" +

@@ -1,11 +1,9 @@
 package Parser.Model.Expressions.Type;
 
-import Lexer.Token;
+import ExceptionHandler.Exceptions.InterpreterException;
 import Parser.Model.Expressions.Literal;
 
-public class IntegerT extends Literal{
-    int val;
-
+public class IntegerT extends Literal<Integer>{
     public IntegerT(int val) {
         this.val = val;
     }
@@ -15,5 +13,30 @@ public class IntegerT extends Literal{
         return "IntegerT{" +
                 "val=" + val +
                 '}';
+    }
+
+    @Override
+    public Literal<Integer> add(Literal<Integer> operand) {
+        return new IntegerT(val + operand.val);
+    }
+
+    @Override
+    public Literal<Integer> subtract(Literal<Integer> operand) {
+        return new IntegerT(val - operand.val);
+    }
+
+    @Override
+    public Literal<Integer> multiply(Literal<Integer> operand) {
+        return new IntegerT(val * operand.val);
+    }
+
+    @Override
+    public Literal<Integer> divide(Literal<Integer> operand) {
+        return new IntegerT(val / operand.val);
+    }
+
+    @Override
+    public Literal<Integer> modulo(Literal<Integer> operand) throws InterpreterException {
+        return new IntegerT(val % operand.val);
     }
 }

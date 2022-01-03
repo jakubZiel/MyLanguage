@@ -1,5 +1,7 @@
 package Parser.Model.Instructions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Scope;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.Type.ListT;
@@ -17,5 +19,10 @@ public class ListInitInstr extends InitInstr{
         return "ListInitInstr{" +
                 "nestedType=" + nestedType +
                 '}';
+    }
+
+    @Override
+    public void execute(Scope scope) throws InterpreterException {
+
     }
 }

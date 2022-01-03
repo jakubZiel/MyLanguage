@@ -1,6 +1,9 @@
 package Parser.Model.Instructions;
 
-import Parser.Model.Node;
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Scope;
 
-public abstract class Instruction extends Node {
+
+public abstract class Instruction {
+    public void execute(Scope scope) throws InterpreterException {}
 }

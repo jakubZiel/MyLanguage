@@ -11,6 +11,14 @@ public class Program {
         this.functions = functions;
     }
 
+    public List<FunctionDeclaration> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(List<FunctionDeclaration> functions) {
+        this.functions = functions;
+    }
+
     @Override
     public String toString() {
         return "Program{" +

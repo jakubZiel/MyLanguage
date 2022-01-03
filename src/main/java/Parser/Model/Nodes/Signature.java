@@ -12,6 +12,14 @@ public class Signature {
         this.identifier = (String) identifier.getValue();
     }
 
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
     @Override
     public String toString() {
         return "Signature{" +

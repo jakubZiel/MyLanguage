@@ -1,5 +1,7 @@
 package Parser.Model.Statements;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
 import Parser.Model.Instructions.Instruction;
@@ -19,6 +21,26 @@ public class IfStatement extends Instruction {
         this.elseIfConditions = elseIfConditions;
         this.elseIfBodies = elseIfBodies;
         this.elseBlock = elseBlock;
+    }
+
+    public Condition getCondition() {
+        return condition;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public List<Condition> getElseIfConditions() {
+        return elseIfConditions;
+    }
+
+    public List<Block> getElseIfBodies() {
+        return elseIfBodies;
+    }
+
+    public Block getElseBlock() {
+        return elseBlock;
     }
 
     @Override

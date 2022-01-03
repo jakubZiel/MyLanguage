@@ -1,5 +1,7 @@
 package Parser.Model.Instructions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Scope;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
 
@@ -18,6 +20,14 @@ public class AssignInst extends Instruction{
                 ", assingedValue=" + assingedValue +
                 '}';
     }
+
+    @Override
+    public void execute(Scope scope) throws InterpreterException {
+        if (!scope.setVariable(identifier, assingedValue.execute(scope)))
+            throw new InterpreterException("Variable " + identifier + " doesn't exist in this context", null);
+    }
+
+
 }
 
 

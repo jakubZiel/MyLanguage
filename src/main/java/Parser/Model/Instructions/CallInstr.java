@@ -20,4 +20,17 @@ public class CallInstr extends Instruction{
     public CallInstr(ArrayCall arrayCall){
         this.arrayCall = arrayCall;
     }
+
+    public FunctionCall getFunctionCall() {
+        return functionCall;
+    }
+
+    public ListOppCall getListOppCall() {
+        return listOppCall;
+    }
+
+    public ArrayCall getArrayCall() {
+        return arrayCall;
+    }
+
 }
