@@ -3,14 +3,14 @@ package Interpreter;
 import ExceptionHandler.Exceptions.InterpreterException;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
+import Parser.Model.Conditions.Comparison;
 import Parser.Model.Conditions.Condition;
 import Parser.Model.Expressions.Arguments;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.FunctionCall;
 import Parser.Model.Expressions.Literal;
-import Parser.Model.Instructions.CallInstr;
-import Parser.Model.Instructions.Instruction;
-import Parser.Model.Instructions.ReturnInst;
+import Parser.Model.Instructions.*;
+import Parser.Model.Nodes.Identifier;
 import Parser.Model.Nodes.Program;
 import Parser.Model.Statements.IfStatement;
 import Parser.Model.Statements.WhileStatement;
@@ -32,14 +32,40 @@ public class ExecuteVisitor implements Visitor{
 
     @Override
     public <T> Literal<T> visit(Expression expression) throws InterpreterException {
-        for (var obj : expression.getOperands()) {
-            obj.accept(this);
+        var operandIter = expression.getOperands().iterator();
+        var operatorIter = expression.getOperators().iterator();
+        Literal<T> result = operandIter.next().accept(this);
+
+        while (operatorIter.hasNext()) {
+            switch(operatorIter.next()){
+                case ADD:
+                    result = result.add(operandIter.next().accept(this));
+                    break;
+                case SUBTRACT:
+                    result = result.subtract(operandIter.next().accept(this));
+                    break;
+                case MULTIPLY:
+                    result = result.multiply(operandIter.next().accept(this));
+                    break;
+                case DIVIDE:
+                    result = result.divide(operandIter.next().accept(this));
+                    break;
+                case MODULO:
+                    result = result.modulo(operandIter.next().accept(this));
+                    break;
+            }
         }
-        return null;
+        return result;
     }
 
     public <T> Literal<T> visit(Literal<T> literal) throws InterpreterException {
-        return null;
+        return literal;
+    }
+
+    public <T> Literal<T> visit(Identifier identifier) throws InterpreterException{
+        var variable = (Variable) scope.getVariable(identifier.getName());
+        var value = (Literal<T>) variable.getValue();
+        return value;
     }
 
     public void visit(Program program) throws InterpreterException {
@@ -52,7 +78,7 @@ public class ExecuteVisitor implements Visitor{
         }
     }
 
-    public <T> T visit(FunctionCall functionCall) throws InterpreterException {
+    public <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException {
         calledFunction = functionCall;
         ExecuteVisitor functionContext = new ExecuteVisitor(new Scope(null));
         FunctionDeclaration function = functions.get(functionCall.getIdentifier());
@@ -67,49 +93,71 @@ public class ExecuteVisitor implements Visitor{
             functionContext.scope.addVariable(signature.getIdentifier(), argIter.next());
         }
         functionContext.visit(function);
-        return null;
+        return functionContext.returned.accept(this);
     }
 
-    public <T> T visit(FunctionDeclaration function) throws InterpreterException {
+    public void visit(FunctionDeclaration function) throws InterpreterException {
         visit(function.getBody());
-        return null;
     }
 
     public void visit(WhileStatement whileStatement) throws InterpreterException {
         var condition = whileStatement.getCondition();
         var body = whileStatement.getBody();
 
-        while (condition.execute(scope) && returned == null){
+        while (visit(whileStatement.getCondition()) && returned == null){
                visit(body);
         }
     }
 
     public void visit(IfStatement ifStatement) throws InterpreterException {
-        if (ifStatement.getCondition().execute(scope)){
+        if (visit(ifStatement.getCondition())){
             visit(ifStatement.getBlock());
             return;
         }
-        var elifsBodyIter = ifStatement.getElseIfBodies().iterator();
+        var elifBodyIter = ifStatement.getElseIfBodies().iterator();
         for (var condition : ifStatement.getElseIfConditions()){
-            var block =  elifsBodyIter.next();
+            var block =  elifBodyIter.next();
 
-            if (condition.execute(scope)){
+            if (visit(condition)){
                 visit(block);
                 return;
             }
         }
-
         if (ifStatement.getElseBlock() != null){
             visit(ifStatement.getElseBlock());
         }
     }
 
-    public void visit(Instruction instruction) throws InterpreterException {
-        instruction.execute(scope);
+    public <T> Literal<T> visit(ReturnInst returnInst) throws InterpreterException {
+        returned = returnInst.getReturned().accept(this);
+        return (Literal<T>) returned;
     }
 
-    public void visit(ReturnInst returnInst) throws InterpreterException {
-        returned = returnInst.getReturned().execute(scope);
+    @Override
+    public <T> Literal<T> visit(ListInitInstr listInitInstr) throws InterpreterException {
+        return null;
+    }
+
+    @Override
+    public void visit(AssignInst assignInst) throws InterpreterException {
+        if (!scope.setVariable( assignInst.getIdentifier(), assignInst.getAssignedValue().accept(this)))
+            throw new InterpreterException("Variable " + assignInst.getIdentifier() + " doesn't exist in this context", null);
+    }
+
+    @Override
+    public void visit(InitInstr initInstr) throws InterpreterException {
+        if (!scope.addVariable(initInstr.getIdentifier(), initInstr.getAssignedValue().accept(this)))
+            throw new InterpreterException("Variable " + initInstr.getIdentifier() + " doesn't exist in this context", null);
+    }
+
+    public <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException {
+        if (callInstr.getFunctionCall() != null)
+            return callInstr.getFunctionCall().accept(this);
+        if (callInstr.getListOppCall() != null)
+            return null;
+        if (callInstr.getArrayCall() != null)
+            return null;
+        return null;
     }
 
     public void visit(Block block) throws InterpreterException {
@@ -122,39 +170,67 @@ public class ExecuteVisitor implements Visitor{
         for (var instruction : block.getInstructions()){
             if (returned != null)
                 break;
-            if (instruction instanceof WhileStatement){
-                visit((WhileStatement) instruction);
-            } else if (instruction instanceof IfStatement){
-                visit((IfStatement) instruction);
-            } else if (instruction instanceof ReturnInst){
-                visit((ReturnInst) instruction);
-            } else if (instruction instanceof CallInstr){
-
-                visit((CallInstr) instruction);
-            } else
-                visit(instruction);
+            instruction.accept(this);
         }
         scope = scope.parent;
-    }
-
-    public void visit(CallInstr callInstr) throws InterpreterException {
-        if (callInstr.getFunctionCall() != null)
-            visit(callInstr.getFunctionCall());
-        if (callInstr.getListOppCall() != null)
-            return;
-        if (callInstr.getArrayCall() != null)
-            return;
     }
 
     public <T> List<Literal<T>> visit(Arguments arguments) throws InterpreterException {
         List<Literal<T>> literals = new ArrayList<>();
         for (var arg: arguments.arguments) {
-            literals.add(arg.execute(scope));
+            literals.add(arg.accept(this));
         }
         return literals;
     }
 
     public boolean visit(Condition condition) throws InterpreterException {
-        return condition.execute(scope);
+
+        if (condition instanceof Comparison)
+            return visit((Comparison) condition);
+
+        var condIter = condition.getConditions().iterator();
+        var operatorIter = condition.getOperators().iterator();
+
+        var operand = condIter.next();
+        boolean result = operand instanceof Comparison ? visit((Comparison) operand) : visit(operand);
+
+        while (operatorIter.hasNext()) {
+            operand = condIter.next();
+            var currentBool = operand instanceof Comparison ? visit((Comparison) operand) : visit(operand);
+            switch(operatorIter.next()){
+                case OR:
+                    result = result || currentBool;
+                    break;
+                case AND:
+                    if (result)
+                        result = currentBool;
+                    else
+                        return false;
+            }
+        }
+        return result;
+    }
+
+    public boolean visit(Comparison comparison) throws InterpreterException{
+        var leftLiteral = comparison.getLeft().accept(this);
+        var rightLiteral = comparison.getRight().accept(this);
+
+        if (leftLiteral.getClass() != rightLiteral.getClass())
+            throw new InterpreterException("Can not compare " + leftLiteral.getClass() + " and " + rightLiteral.getClass(), null);
+
+        switch (comparison.getOperator()) {
+            case EQUAL:
+                return leftLiteral.equal(rightLiteral);
+            case N_EQUAL:
+                return leftLiteral.notEqual(rightLiteral);
+            case ANGLE_L:
+                return leftLiteral.less(rightLiteral);
+            case ANGLE_R:
+                return leftLiteral.more(rightLiteral);
+            case LESS_OR_EQUAL:
+                return leftLiteral.lessEqual(rightLiteral);
+            default:
+                return leftLiteral.moreEqual(rightLiteral);
+        }
     }
 }

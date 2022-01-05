@@ -341,7 +341,7 @@ public class Parser {
 
     protected ListT parseListType() throws Exception {
         Token type = new Token();
-        return new ListT(checkListNesting(type), type.type);
+        return new ListT(checkListNesting(type) - 1, type.type);
     }
 
     protected int checkListNesting(Token type) throws Exception {

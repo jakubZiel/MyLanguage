@@ -2,8 +2,10 @@ package Parser.Model.Instructions;
 
 import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Scope;
+import Interpreter.Visitor;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Expressions.Type.ListT;
 
 public class ListInitInstr extends InitInstr{
@@ -22,7 +24,7 @@ public class ListInitInstr extends InitInstr{
     }
 
     @Override
-    public void execute(Scope scope) throws InterpreterException {
-
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

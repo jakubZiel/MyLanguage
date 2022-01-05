@@ -1,8 +1,11 @@
 package Parser.Model.Instructions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Parser.Model.Expressions.ArrayCall;
 import Parser.Model.Expressions.FunctionCall;
 import Parser.Model.Expressions.ListOppCall;
+import Parser.Model.Expressions.Literal;
 
 public class CallInstr extends Instruction{
     private FunctionCall functionCall;
@@ -33,4 +36,8 @@ public class CallInstr extends Instruction{
         return arrayCall;
     }
 
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+         return visitor.visit(this);
+    }
 }

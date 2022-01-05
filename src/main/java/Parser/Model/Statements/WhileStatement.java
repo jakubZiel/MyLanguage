@@ -4,6 +4,7 @@ import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Instructions.Instruction;
 
 public class WhileStatement extends Instruction {
@@ -29,5 +30,11 @@ public class WhileStatement extends Instruction {
 
     public Condition getCondition() {
         return condition;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        visitor.visit(this);
+        return null;
     }
 }

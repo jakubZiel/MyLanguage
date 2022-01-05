@@ -1,9 +1,10 @@
 package Parser.Model.Instructions;
 
 import ExceptionHandler.Exceptions.InterpreterException;
-import Interpreter.Scope;
+import Interpreter.Visitor;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
+import Parser.Model.Expressions.Literal;
 
 public class AssignInst extends Instruction{
     private String identifier;
@@ -17,17 +18,24 @@ public class AssignInst extends Instruction{
     public String toString() {
         return "AssignInst{" +
                 "identifier='" + identifier + '\'' +
-                ", assingedValue=" + assingedValue +
+                ", assignedValue=" + assingedValue +
                 '}';
     }
 
-    @Override
-    public void execute(Scope scope) throws InterpreterException {
-        if (!scope.setVariable(identifier, assingedValue.execute(scope)))
-            throw new InterpreterException("Variable " + identifier + " doesn't exist in this context", null);
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public Expression getAssignedValue() {
+        return assingedValue;
     }
 
 
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        visitor.visit(this);
+        return null;
+    }
 }
 
 

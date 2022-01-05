@@ -28,15 +28,6 @@ public class ListDef extends Literal<List<Expression>> {
     }
 
     @Override
-    public Literal<List<Expression>> execute(Scope scope) throws InterpreterException {
-        Literal<List<Expression>> result = new ListDef();
-
-        result.val.add(val.get(0).execute(scope));
-
-        return result;
-    }
-
-    @Override
     public Literal<List<Expression>> add(Literal<List<Expression>> operand) {
         return new ListDef(Stream.concat(val.stream(), operand.val.stream()).collect(Collectors.toList()));
     }

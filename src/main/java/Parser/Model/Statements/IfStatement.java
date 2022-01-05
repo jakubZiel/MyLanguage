@@ -4,6 +4,7 @@ import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Instructions.Instruction;
 
 import java.util.List;
@@ -52,5 +53,11 @@ public class IfStatement extends Instruction {
                 ", elseIfBodies=" + elseIfBodies +
                 ", elseBlock=" + elseBlock +
                 '}';
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        visitor.visit(this);
+        return null;
     }
 }

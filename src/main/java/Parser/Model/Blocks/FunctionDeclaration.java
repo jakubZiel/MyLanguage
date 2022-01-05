@@ -4,6 +4,7 @@ import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visited;
 import Interpreter.Visitor;
 import Lexer.TokenType;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Nodes.Parameters;
 
 public class FunctionDeclaration implements Visited {
@@ -64,8 +65,9 @@ public class FunctionDeclaration implements Visited {
     }
 
     @Override
-    public Object accept(Visitor visitor) throws InterpreterException {
-        return visitor.visit(this);
+    public <T>Literal<T> accept(Visitor visitor) throws InterpreterException {
+        visitor.visit(this);
+        return null;
     }
 }
 

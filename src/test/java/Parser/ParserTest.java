@@ -123,8 +123,7 @@ class ParserTest {
     void parseListType() throws Exception {
         String data = "list<list<list<int>>>";
         Parser parser = new Parser(Lexer.lexerFactory(data));
-
-        parser.parseListType();
+        var ASTree = parser.parseListType();
     }
 
     @Test

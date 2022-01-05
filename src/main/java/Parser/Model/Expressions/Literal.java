@@ -10,7 +10,7 @@ public class Literal<T> extends Expression implements Visited {
     public T val;
 
     @Override
-    public Object accept(Visitor visitor) throws InterpreterException {
+    public Literal<T> accept(Visitor visitor) throws InterpreterException {
         return visitor.visit(this);
     }
 
@@ -19,11 +19,6 @@ public class Literal<T> extends Expression implements Visited {
     public Literal<T> multiply(Literal<T> operand) throws InterpreterException{return null;}
     public Literal<T> divide(Literal<T> operand) throws InterpreterException{return null;}
     public Literal<T> modulo(Literal<T> operand) throws InterpreterException{return null;}
-
-    @Override
-    public Literal<T> execute(Scope scope) throws InterpreterException {
-        return this;
-    }
 
     public int compare(Literal<T> operand){
         Comparable<T> value = (Comparable<T>) val;
@@ -53,7 +48,4 @@ public class Literal<T> extends Expression implements Visited {
     public boolean notEqual(Literal<T> operand){
         return compare(operand) != 0;
     }
-
-
-
 }

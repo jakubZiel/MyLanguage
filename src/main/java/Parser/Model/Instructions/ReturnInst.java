@@ -1,6 +1,9 @@
 package Parser.Model.Instructions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Parser.Model.Expressions.Expression;
+import Parser.Model.Expressions.Literal;
 
 public class ReturnInst extends Instruction {
 
@@ -19,5 +22,10 @@ public class ReturnInst extends Instruction {
         return "ReturnInst{" +
                 "returned=" + returned +
                 '}';
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

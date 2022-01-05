@@ -41,8 +41,5 @@ public class StringT extends Literal<String> {
     @Override
     public Literal<String> modulo(Literal<String> operand) throws InterpreterException {
         throw new InterpreterException("Can not modulo" + getClass(), null);
-
     }
-
-
 }

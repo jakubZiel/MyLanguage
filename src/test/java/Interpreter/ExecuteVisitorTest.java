@@ -17,7 +17,7 @@ class ExecuteVisitorTest {
     }
     @Test
     void visitProgram() throws Exception {
-        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return x + f;} int main(){int y = 123; int z = 543; fun(123, 124); return z + y;}";
+        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return x + f;} int main(){int y = 123; int z = 543; z = fun(123, 124); return z + y;}";
         String expected = "Program{functions=[FunctionDeclaration{returnedType=VOID, identifier='fun', parameters=Parameters{signatures=[Signature{type=INT, identifier='x'}, Signature{type=DOUBLE, identifier='f'}]}, body=Block{instructions=[]}}, FunctionDeclaration{returnedType=INT, identifier='main', parameters=Parameters{signatures=[]}, body=Block{instructions=[ReturnInst{returned=DoubleT{val=0.0}}]}}]}";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 

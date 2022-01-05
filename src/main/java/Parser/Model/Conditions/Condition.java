@@ -2,12 +2,15 @@ package Parser.Model.Conditions;
 
 import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Scope;
+import Interpreter.Visited;
+import Interpreter.Visitor;
 import Lexer.TokenType;
+import Parser.Model.Expressions.Literal;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Condition {
+public class Condition implements Visited {
     private List<Condition> conditions;
     private List<TokenType> operators;
 
@@ -32,25 +35,17 @@ public class Condition {
                 '}';
     }
 
-    public boolean execute(Scope scope) throws InterpreterException {
-        var condIter = conditions.iterator();
-        var operatorIter = operators.iterator();
+    public List<Condition> getConditions() {
+        return conditions;
+    }
 
-        boolean result = condIter.next().execute(scope);
+    public List<TokenType> getOperators() {
+        return operators;
+    }
 
-        while (operatorIter.hasNext()) {
-            switch(operatorIter.next()){
-                case OR:
-                    result = result || condIter.next().execute(scope);
-                    break;
-                case AND:
-                    if (result)
-                        result = condIter.next().execute(scope);
-                    else
-                        return false;
-            }
-        }
-        return result;
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return null;
     }
 }
 

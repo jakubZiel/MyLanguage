@@ -3,6 +3,7 @@ package Parser.Model.Nodes;
 import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Scope;
 import Interpreter.Variable;
+import Interpreter.Visitor;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.Literal;
@@ -25,10 +26,12 @@ public class Identifier extends Expression {
                 '}';
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
-    public <T> Literal<T> execute(Scope scope) throws InterpreterException {
-        var variable = (Variable) scope.getVariable(name);
-        var value = (Literal<T>) variable.getValue();
-        return value;
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

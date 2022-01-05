@@ -29,7 +29,7 @@ public class FunctionCall extends Expression {
     }
 
     @Override
-    public Object accept(Visitor visitor) throws InterpreterException {
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
         return visitor.visit(this);
     }
 }

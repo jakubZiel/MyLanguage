@@ -1,9 +1,7 @@
 package Parser.Model.Instructions;
 
-import ExceptionHandler.Exceptions.InterpreterException;
-import Interpreter.Scope;
+import Interpreter.Visited;
 
 
-public abstract class Instruction {
-    public void execute(Scope scope) throws InterpreterException {}
+public abstract class Instruction implements Visited {
 }
