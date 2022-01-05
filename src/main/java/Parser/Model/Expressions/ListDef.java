@@ -2,6 +2,7 @@ package Parser.Model.Expressions;
 
 import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Scope;
+import Interpreter.Visitor;
 import Lexer.TokenType;
 
 import java.util.ArrayList;
@@ -25,6 +26,11 @@ public class ListDef extends Literal<List<Expression>> {
                 "elementsType=" + elementsType +
                 ", elements=" + val +
                 '}';
+    }
+
+    @Override
+    public Literal<List<Expression>> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 
     @Override

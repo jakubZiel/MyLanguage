@@ -23,4 +23,16 @@ public class ArrayCall extends Expression {
                 ", index=" + index +
                 '}';
     }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public Expression getIndex() {
+        return index;
+    }
+
+    public Expression getAssignedValue() {
+        return assignedValue;
+    }
 }

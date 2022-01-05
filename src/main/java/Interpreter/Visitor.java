@@ -7,6 +7,7 @@ import Parser.Model.Conditions.Comparison;
 import Parser.Model.Conditions.Condition;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.FunctionCall;
+import Parser.Model.Expressions.ListDef;
 import Parser.Model.Expressions.Literal;
 import Parser.Model.Instructions.*;
 import Parser.Model.Nodes.Identifier;
@@ -14,10 +15,14 @@ import Parser.Model.Nodes.Program;
 import Parser.Model.Statements.IfStatement;
 import Parser.Model.Statements.WhileStatement;
 
+import java.util.List;
+
 public interface Visitor {
     <T> Literal<T> visit(Identifier identifier) throws InterpreterException;
 
     <T> Literal<T> visit(Literal<T> literal) throws InterpreterException;
+
+    <T> Literal<List<Literal<T>>> visit(ListDef listDef) throws InterpreterException;
 
     <T> Literal<T> visit(Expression expression) throws InterpreterException;
 
@@ -27,7 +32,7 @@ public interface Visitor {
 
     <T> Literal<T> visit(ReturnInst returnInst) throws InterpreterException;
 
-    <T> Literal<T> visit(ListInitInstr listInitInstr) throws InterpreterException;
+    void visit(ListInitInstr listInitInstr) throws InterpreterException;
 
     <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException;
 

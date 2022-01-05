@@ -5,10 +5,7 @@ import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Conditions.Comparison;
 import Parser.Model.Conditions.Condition;
-import Parser.Model.Expressions.Arguments;
-import Parser.Model.Expressions.Expression;
-import Parser.Model.Expressions.FunctionCall;
-import Parser.Model.Expressions.Literal;
+import Parser.Model.Expressions.*;
 import Parser.Model.Instructions.*;
 import Parser.Model.Nodes.Identifier;
 import Parser.Model.Nodes.Program;
@@ -28,6 +25,18 @@ public class ExecuteVisitor implements Visitor{
 
     public ExecuteVisitor(Scope scope) {
         this.scope = scope;
+    }
+
+    @Override
+    public <T> Literal<List<Literal<T>>> visit(ListDef listDef) throws InterpreterException {
+
+        List<Literal<T>> literals = new ArrayList<>();
+
+        for (var expression : listDef.val){
+            literals.add(expression.accept(this));
+        }
+
+        return new Literal<>(literals);
     }
 
     @Override
@@ -134,14 +143,16 @@ public class ExecuteVisitor implements Visitor{
     }
 
     @Override
-    public <T> Literal<T> visit(ListInitInstr listInitInstr) throws InterpreterException {
-        return null;
-    }
-
-    @Override
     public void visit(AssignInst assignInst) throws InterpreterException {
         if (!scope.setVariable( assignInst.getIdentifier(), assignInst.getAssignedValue().accept(this)))
             throw new InterpreterException("Variable " + assignInst.getIdentifier() + " doesn't exist in this context", null);
+    }
+
+    @Override
+    public void visit(ListInitInstr listInitInstr) throws InterpreterException {
+        //TODO add type checking
+        if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this)))
+            throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " doesn't exist in this context", null);
     }
 
     @Override
@@ -153,10 +164,17 @@ public class ExecuteVisitor implements Visitor{
     public <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException {
         if (callInstr.getFunctionCall() != null)
             return callInstr.getFunctionCall().accept(this);
-        if (callInstr.getListOppCall() != null)
+        else if (callInstr.getListOppCall() != null)
+            return callInstr.getListOppCall().accept(this);
+        else
+            return callInstr.getArrayCall().accept(this);
+    }
+
+    public <T> Literal<T> visit(ArrayCall arrayCall) throws InterpreterException{
+        if (arrayCall.getAssignedValue() == null) {
+
             return null;
-        if (callInstr.getArrayCall() != null)
-            return null;
+        }
         return null;
     }
 
@@ -171,6 +189,7 @@ public class ExecuteVisitor implements Visitor{
             if (returned != null)
                 break;
             instruction.accept(this);
+            System.out.println(instruction);
         }
         scope = scope.parent;
     }

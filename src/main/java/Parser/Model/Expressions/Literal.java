@@ -9,6 +9,13 @@ import Interpreter.Visitor;
 public class Literal<T> extends Expression implements Visited {
     public T val;
 
+    public Literal(T val) {
+        this.val = val;
+    }
+
+    public Literal(){
+    }
+
     @Override
     public Literal<T> accept(Visitor visitor) throws InterpreterException {
         return visitor.visit(this);

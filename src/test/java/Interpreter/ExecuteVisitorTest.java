@@ -17,8 +17,17 @@ class ExecuteVisitorTest {
     }
     @Test
     void visitProgram() throws Exception {
-        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return x + f;} int main(){int y = 123; int z = 543; z = fun(123, 124); return z + y;}";
-        String expected = "Program{functions=[FunctionDeclaration{returnedType=VOID, identifier='fun', parameters=Parameters{signatures=[Signature{type=INT, identifier='x'}, Signature{type=DOUBLE, identifier='f'}]}, body=Block{instructions=[]}}, FunctionDeclaration{returnedType=INT, identifier='main', parameters=Parameters{signatures=[]}, body=Block{instructions=[ReturnInst{returned=DoubleT{val=0.0}}]}}]}";
+        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return x + f;} int main(){int y = 123;  fun(0, 0); int z = 543; z = fun(123, 124); return z + y;}";
+        Parser parser = new Parser(Lexer.lexerFactory(data));
+
+        var ASTree = parser.parseProgram();
+        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        visitor.visit(ASTree);
+    }
+
+    @Test
+    void visitListDef() throws Exception {
+        String data = "int main(){ int x = 123; int z = 123; list<list<int>> array = [[1, x], [1, f] , [3, 4]]; return 0;}";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();

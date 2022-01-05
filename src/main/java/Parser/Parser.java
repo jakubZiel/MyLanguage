@@ -323,7 +323,7 @@ public class Parser {
         }
     }
 
-    protected Expression parseListDef() throws Exception {
+    public Expression parseListDef() throws Exception {
         Token opening = getToken();
         if (peekToken(0).tokenIs(SQUARE_R)) {
             getToken();

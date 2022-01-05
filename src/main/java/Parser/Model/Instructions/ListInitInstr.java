@@ -25,6 +25,7 @@ public class ListInitInstr extends InitInstr{
 
     @Override
     public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
-        return visitor.visit(this);
+        visitor.visit(this);
+        return null;
     }
 }
