@@ -146,15 +146,12 @@ public class ExecuteVisitor implements Visitor{
 
     @Override
     public void visit(ListInitInstr listInitInstr) throws InterpreterException {
-        //TODO add type checking
         if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this)))
             throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " already exist in this scope", null);
     }
 
     @Override
     public void visit(InitInstr initInstr) throws InterpreterException {
-        //TODO add type checking
-
         var value = initInstr.getAssignedValue();
         if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this)))
             throw new InterpreterException("Variable " + initInstr.getIdentifier() + " already exist in this scope", null);
@@ -181,7 +178,6 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(ListInsertDeleteCall listInsertDeleteCall) throws InterpreterException {
-        //TODO add type checking
         var variable = (Variable) scope.getVariable(listInsertDeleteCall.getIdentifier());
         var list = (ListDef) variable.getValue();
 
@@ -197,12 +193,11 @@ public class ExecuteVisitor implements Visitor{
     public void visit(ListOppCall listOppCall) throws InterpreterException {
         var variable = (Variable) scope.getVariable(listOppCall.getIdentifier());
         var list = (ListDef) variable.getValue();
-        //TODO add type checking
 
         if (listOppCall.getArrowExpression().getExpression() != null){
             for (int index = 0; index < list.val.size(); index++) {
                 scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
-                list.val.set(index, listOppCall.getArrowExpression().getExpression().accept(this));
+                scope.setVariable(listOppCall.getIdentifier(), listOppCall.getArrowExpression().getExpression().accept(this), index);
                 scope.remove(listOppCall.getArrowExpression().getArgument());
             }
         } else {

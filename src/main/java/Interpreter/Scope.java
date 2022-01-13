@@ -4,6 +4,7 @@ import ExceptionHandler.Exceptions.InterpreterException;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.ListDef;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Nodes.Program;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class Scope {
         return false;
     }
 
-    public boolean setVariable(String identifier, Object value){
+    public boolean setVariable(String identifier, Literal value){
          Scope current = this;
          while (current != null) {
              if (current.variables.containsKey(identifier)) {
@@ -49,7 +50,7 @@ public class Scope {
         Scope current = this;
         while (current != null) {
             if (current.variables.containsKey(identifier)) {
-                var list = (Variable) getVariable(identifier);
+                var list = getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
                     throw new InterpreterException("Object is not an array", null);
@@ -63,22 +64,22 @@ public class Scope {
         return false;
     }
 
-    public Object getVariable(String identifier, int index) throws InterpreterException {
+    public Literal getVariable(String identifier, int index) throws InterpreterException {
         Scope current = this;
 
         while (current != null) {
             if (current.variables.containsKey(identifier)){
-                var list = (Variable) getVariable(identifier);
+                var list = getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
                     throw new InterpreterException("Object is not an array", null);
                     ListDef listObj = (ListDef) list.getValue();
 
-                    return listObj.val.get(index);
+                    return (Literal) listObj.val.get(index);
             } else
                 current = current.parent;
         }
-        return false;
+        throw new InterpreterException("Variable " + identifier+ " doesn't exist", null);
     }
 
     public Variable getVariable(String identifier) throws InterpreterException {
@@ -91,7 +92,7 @@ public class Scope {
         throw new InterpreterException("Variable with identifier " + identifier + "doesn't exist", null);
     }
 
-    public boolean addVariable(String identifier, Object value){
+    public boolean addVariable(String identifier, Literal value){
         if (contains(identifier))
             return false;
         variables.put(identifier, new Variable(identifier, value));

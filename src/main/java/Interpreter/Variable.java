@@ -1,10 +1,14 @@
 package Interpreter;
 
+import Lexer.TokenType;
+import Parser.Model.Expressions.Literal;
+
 public class Variable {
-    Object value;
+    Literal value;
+    TokenType declaredType;
     private final String identifier;
 
-    public Variable(String identifier, Object value) {
+    public Variable(String identifier, Literal value) {
         this.value = value;
         this.identifier = identifier;
     }
@@ -13,7 +17,7 @@ public class Variable {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(Literal value) {
         this.value = value;
     }
 
