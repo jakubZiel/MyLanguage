@@ -71,9 +71,7 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public <T> Literal<T> visit(Identifier identifier) throws InterpreterException{
-        var variable = (Variable) scope.getVariable(identifier.getName());
-        var value = (Literal<T>) variable.getValue();
-        return value;
+        return (Literal<T>) scope.getVariable(identifier.getName()).getValue();
     }
 
     public void visit(Program program) throws InterpreterException {
@@ -90,7 +88,6 @@ public class ExecuteVisitor implements Visitor{
         calledFunction = functionCall;
         ExecuteVisitor functionContext = new ExecuteVisitor(new Scope(null));
         FunctionDeclaration function = functions.get(functionCall.getIdentifier());
-
         if (function == null)
             throw new InterpreterException("Function " + functionCall.getIdentifier() + " doesn't exist", null);
 
@@ -151,14 +148,16 @@ public class ExecuteVisitor implements Visitor{
     public void visit(ListInitInstr listInitInstr) throws InterpreterException {
         //TODO add type checking
         if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this)))
-            throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " doesn't exist in this context", null);
+            throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " already exist in this scope", null);
     }
 
     @Override
     public void visit(InitInstr initInstr) throws InterpreterException {
+        //TODO add type checking
+
         var value = initInstr.getAssignedValue();
         if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this)))
-            throw new InterpreterException("Variable " + initInstr.getIdentifier() + " doesn't exist in this context", null);
+            throw new InterpreterException("Variable " + initInstr.getIdentifier() + " already exist in this scope", null);
     }
 
     public <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException {
@@ -171,8 +170,8 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public <T> Literal<T> visit(ArrayCall arrayCall) throws InterpreterException{
-        double val = (double) arrayCall.getIndex().accept(this).val;
-        int index = (int) val;
+        int index = (int) arrayCall.getIndex().accept(this).val;
+
         if (arrayCall.getAssignedValue() == null) {
             //TODO - change result value of getVariable to Literal<T>
             return (Literal<T>) scope.getVariable(arrayCall.getIdentifier(), index);
@@ -182,22 +181,23 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(ListInsertDeleteCall listInsertDeleteCall) throws InterpreterException {
+        //TODO add type checking
         var variable = (Variable) scope.getVariable(listInsertDeleteCall.getIdentifier());
         var list = (ListDef) variable.getValue();
 
         if (listInsertDeleteCall.getOperation() == TokenType.ADD_LIST)
             list.val.add(listInsertDeleteCall.getExpression().accept(this));
         else {
-            double value = (double) listInsertDeleteCall.getExpression().accept(this).val;
-            int index = (int) value;
+            int index = (int) listInsertDeleteCall.getExpression().accept(this).val;
+
             list.val.remove(index);
         }
     }
 
     public void visit(ListOppCall listOppCall) throws InterpreterException {
-        //TODO add  operations 'add' and 'remove'
         var variable = (Variable) scope.getVariable(listOppCall.getIdentifier());
         var list = (ListDef) variable.getValue();
+        //TODO add type checking
 
         if (listOppCall.getArrowExpression().getExpression() != null){
             for (int index = 0; index < list.val.size(); index++) {

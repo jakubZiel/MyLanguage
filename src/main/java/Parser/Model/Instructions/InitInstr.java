@@ -41,4 +41,8 @@ public class InitInstr extends Instruction{
         visitor.visit(this);
         return null;
     }
+
+    public TokenType getType() {
+        return type;
+    }
 }

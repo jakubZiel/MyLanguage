@@ -86,7 +86,13 @@ public class Lexer {
             } else
                 break;
         }
-        Object value = dotFound ? Double.parseDouble(number.toString()) : Integer.parseInt(number.toString());
+        Object value;
+        if (dotFound){
+            value = Double.parseDouble(number.toString());
+        }else {
+            value = Integer.parseInt(number.toString());
+        }
+
         return new Token(NUMBER_T, dataSource.getCurrentPos(), value);
     }
 
@@ -186,7 +192,6 @@ public class Lexer {
         KEYWORDS.put("filter", FILTER);
         KEYWORDS.put("add", ADD_LIST);
         KEYWORDS.put("remove", REMOVE_LIST);
-        KEYWORDS.put("print", PRINT);
 
         DOUBLE_SPECIAL.put("!=", N_EQUAL);
         DOUBLE_SPECIAL.put("==", EQUAL);

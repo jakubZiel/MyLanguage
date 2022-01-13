@@ -2,6 +2,7 @@ package Parser.Model.Expressions.Type;
 
 import ExceptionHandler.Exceptions.InterpreterException;
 import Lexer.Token;
+import Lexer.TokenType;
 import Parser.Model.Expressions.Literal;
 
 public class StringT extends Literal<String> {
@@ -41,5 +42,10 @@ public class StringT extends Literal<String> {
     @Override
     public Literal<String> modulo(Literal<String> operand) throws InterpreterException {
         throw new InterpreterException("Can not modulo" + getClass(), null);
+    }
+
+    @Override
+    public TokenType getType() {
+        return TokenType.STRING_T;
     }
 }

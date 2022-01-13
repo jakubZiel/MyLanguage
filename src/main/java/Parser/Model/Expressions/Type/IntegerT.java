@@ -1,6 +1,7 @@
 package Parser.Model.Expressions.Type;
 
 import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.TokenType;
 import Parser.Model.Expressions.Literal;
 
 public class IntegerT extends Literal<Integer>{
@@ -38,5 +39,10 @@ public class IntegerT extends Literal<Integer>{
     @Override
     public Literal<Integer> modulo(Literal<Integer> operand) throws InterpreterException {
         return new IntegerT(val % operand.val);
+    }
+
+    @Override
+    public TokenType getType() {
+        return TokenType.INT;
     }
 }

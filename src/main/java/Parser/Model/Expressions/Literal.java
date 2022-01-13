@@ -3,6 +3,7 @@ package Parser.Model.Expressions;
 import ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visited;
 import Interpreter.Visitor;
+import Lexer.TokenType;
 
 public class Literal<T> extends Expression implements Visited {
     public T val;
@@ -19,7 +20,7 @@ public class Literal<T> extends Expression implements Visited {
         return visitor.visit(this);
     }
 
-    public Literal<T> add(Literal<T> operand){return null;}
+    public Literal<T> add(Literal<T> operand) throws InterpreterException {return null;}
     public Literal<T> subtract(Literal<T> operand) throws InterpreterException{return null;}
     public Literal<T> multiply(Literal<T> operand) throws InterpreterException{return null;}
     public Literal<T> divide(Literal<T> operand) throws InterpreterException{return null;}
@@ -52,5 +53,9 @@ public class Literal<T> extends Expression implements Visited {
 
     public boolean notEqual(Literal<T> operand){
         return compare(operand) != 0;
+    }
+
+    public TokenType getType(){
+        return null;
     }
 }

@@ -105,10 +105,10 @@ class ParserTest {
 
     @Test
     void parseListDef() throws Exception {
-        String data = "[1, 2, 3, 4, f * f]";
+        String data = "[1, 2, 3, 4, f * f, [[], [], []]]";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
-        parser.parseListDef();
+        var tree = parser.parseListDef();
     }
 
     @Test
@@ -162,6 +162,15 @@ class ParserTest {
         String data = "hello(a, 12, 3)";
         Parser parser = new Parser(Lexer.lexerFactory(data));
         var ASTree = parser.parseIdentified();
+    }
+
+    @Test
+    void parseNumber() throws Exception{
+        String data = "123";
+        Parser parser = new Parser(Lexer.lexerFactory(data));
+
+        var tree = parser.parseNumber(1);
+
     }
 
     @Test

@@ -1,6 +1,7 @@
 package Parser.Model.Expressions.Type;
 
 import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.TokenType;
 import Parser.Model.Expressions.Literal;
 
 public class DoubleT extends Literal<Double> {
@@ -39,5 +40,10 @@ public class DoubleT extends Literal<Double> {
     @Override
     public Literal<Double> modulo(Literal<Double> operand) throws InterpreterException {
         throw new InterpreterException("Can not modulo" + getClass(), null);
+    }
+
+    @Override
+    public TokenType getType() {
+        return TokenType.DOUBLE;
     }
 }

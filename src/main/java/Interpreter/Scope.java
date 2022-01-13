@@ -11,7 +11,6 @@ import java.util.HashMap;
 public class Scope {
     //TODO should be removed from global scope. Functions can be attached to every ExecuteVisitor as a reference field
     public static HashMap<String, FunctionDeclaration> functions = new HashMap<>();
-
     Scope parent;
     HashMap<String, Variable> variables = new HashMap<>();
 
@@ -50,7 +49,6 @@ public class Scope {
         Scope current = this;
         while (current != null) {
             if (current.variables.containsKey(identifier)) {
-
                 var list = (Variable) getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
@@ -77,21 +75,20 @@ public class Scope {
                     ListDef listObj = (ListDef) list.getValue();
 
                     return listObj.val.get(index);
-
             } else
                 current = current.parent;
         }
         return false;
     }
 
-    public Object getVariable(String identifier){
+    public Variable getVariable(String identifier) throws InterpreterException {
         Scope current = this;
         while (current != null) {
             if (current.variables.containsKey(identifier))
                 return current.variables.get(identifier);
             current = current.parent;
         }
-        return false;
+        throw new InterpreterException("Variable with identifier " + identifier + "doesn't exist", null);
     }
 
     public boolean addVariable(String identifier, Object value){
