@@ -383,10 +383,16 @@ public class Parser {
         Token dot = getToken();
         Token operation = getToken();
 
-        if (operation.tokenIs(FOREACH, ADD_LIST, REMOVE_LIST)){
-            return new ListOppCall(identifier, operation, parseArrowExpression());
-        } else if (operation.tokenIs(FILTER))
+        if (operation.tokenIs(ADD_LIST, REMOVE_LIST)){
+            match(getToken(), PAREN_L, "Expected (");
+            Expression expression = parseExpression();
+            match(getToken(), PAREN_R, "Expected )");
+            return new ListInsertDeleteCall(identifier, operation, expression);
+        } else if (operation.tokenIs(FILTER)) {
             return new ListOppCall(identifier, operation, parseArrowPredicate());
+        } else if (operation.tokenIs(FOREACH)) {
+            return new ListOppCall(identifier, operation, parseArrowExpression());
+        }
 
         throw new ParserException("Expected function operation", operation.position);
     }

@@ -1,16 +1,17 @@
 package Parser.Model.Expressions;
 
 import ExceptionHandler.Exceptions.InterpreterException;
-import Interpreter.Scope;
+import Interpreter.Visited;
 import Interpreter.Visitor;
 import Lexer.TokenType;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ListDef extends Literal<List<Expression>> {
+public class ListDef extends Literal<List<Expression>> implements Visited {
     private TokenType elementsType;
     public ListDef() {
         this.val = new ArrayList<>();

@@ -1,5 +1,7 @@
 package Parser.Model.Expressions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Lexer.Token;
 
 public class ArrayCall extends Expression {
@@ -34,5 +36,10 @@ public class ArrayCall extends Expression {
 
     public Expression getAssignedValue() {
         return assignedValue;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

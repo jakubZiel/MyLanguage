@@ -1,7 +1,5 @@
 package Interpreter;
 
-
-
 public class Variable {
     Object value;
     private final String identifier;

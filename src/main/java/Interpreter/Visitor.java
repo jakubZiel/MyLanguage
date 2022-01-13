@@ -5,10 +5,7 @@ import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Conditions.Comparison;
 import Parser.Model.Conditions.Condition;
-import Parser.Model.Expressions.Expression;
-import Parser.Model.Expressions.FunctionCall;
-import Parser.Model.Expressions.ListDef;
-import Parser.Model.Expressions.Literal;
+import Parser.Model.Expressions.*;
 import Parser.Model.Instructions.*;
 import Parser.Model.Nodes.Identifier;
 import Parser.Model.Nodes.Program;
@@ -22,19 +19,25 @@ public interface Visitor {
 
     <T> Literal<T> visit(Literal<T> literal) throws InterpreterException;
 
-    <T> Literal<List<Literal<T>>> visit(ListDef listDef) throws InterpreterException;
+    Literal<List<Expression>> visit(ListDef listDef) throws InterpreterException;
 
     <T> Literal<T> visit(Expression expression) throws InterpreterException;
 
     void visit(Program program) throws InterpreterException;
 
-    <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException;
-
     <T> Literal<T> visit(ReturnInst returnInst) throws InterpreterException;
 
     void visit(ListInitInstr listInitInstr) throws InterpreterException;
 
+    <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException;
+
     <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException;
+
+    <T> Literal<T> visit(ArrayCall arrayCall) throws InterpreterException;
+
+    void visit(ListOppCall listOppCall) throws InterpreterException;
+
+    void visit(ListInsertDeleteCall listInsertDeleteCall) throws InterpreterException;
 
     void visit(FunctionDeclaration function) throws InterpreterException;
 

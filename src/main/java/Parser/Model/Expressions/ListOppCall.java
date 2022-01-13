@@ -1,12 +1,14 @@
 package Parser.Model.Expressions;
 
+import ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Lexer.Token;
 import Lexer.TokenType;
 
 public class ListOppCall extends Expression {
-    private String identifier;
-    private TokenType operation;
-    private ArrowExpression arrowExpression;
+    protected String identifier;
+    protected TokenType operation;
+    protected ArrowExpression arrowExpression;
 
     public ListOppCall(Token identifier, Token operation, ArrowExpression arrowExpression) {
         this.identifier = (String) identifier.getValue();
@@ -21,5 +23,23 @@ public class ListOppCall extends Expression {
                 ", operation=" + operation +
                 ", arrowExpression=" + arrowExpression +
                 '}';
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public TokenType getOperation() {
+        return operation;
+    }
+
+    public ArrowExpression getArrowExpression() {
+        return arrowExpression;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        visitor.visit(this);
+        return null;
     }
 }

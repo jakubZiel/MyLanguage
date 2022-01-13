@@ -1,6 +1,7 @@
 package Interpreter;
 
 import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.TokenType;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Conditions.Comparison;
@@ -28,15 +29,13 @@ public class ExecuteVisitor implements Visitor{
     }
 
     @Override
-    public <T> Literal<List<Literal<T>>> visit(ListDef listDef) throws InterpreterException {
+    public Literal<List<Expression>> visit(ListDef listDef) throws InterpreterException {
+        List<Expression> literals = new ArrayList<>();
 
-        List<Literal<T>> literals = new ArrayList<>();
-
-        for (var expression : listDef.val){
+        for (var expression :  listDef.val){
             literals.add(expression.accept(this));
         }
-
-        return new Literal<>(literals);
+        return new ListDef(literals);
     }
 
     @Override
@@ -157,7 +156,8 @@ public class ExecuteVisitor implements Visitor{
 
     @Override
     public void visit(InitInstr initInstr) throws InterpreterException {
-        if (!scope.addVariable(initInstr.getIdentifier(), initInstr.getAssignedValue().accept(this)))
+        var value = initInstr.getAssignedValue();
+        if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this)))
             throw new InterpreterException("Variable " + initInstr.getIdentifier() + " doesn't exist in this context", null);
     }
 
@@ -171,11 +171,50 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public <T> Literal<T> visit(ArrayCall arrayCall) throws InterpreterException{
+        double val = (double) arrayCall.getIndex().accept(this).val;
+        int index = (int) val;
         if (arrayCall.getAssignedValue() == null) {
-
-            return null;
+            //TODO - change result value of getVariable to Literal<T>
+            return (Literal<T>) scope.getVariable(arrayCall.getIdentifier(), index);
         }
+        scope.setVariable(arrayCall.getIdentifier(), arrayCall.getAssignedValue().accept(this), index);
         return null;
+    }
+
+    public void visit(ListInsertDeleteCall listInsertDeleteCall) throws InterpreterException {
+        var variable = (Variable) scope.getVariable(listInsertDeleteCall.getIdentifier());
+        var list = (ListDef) variable.getValue();
+
+        if (listInsertDeleteCall.getOperation() == TokenType.ADD_LIST)
+            list.val.add(listInsertDeleteCall.getExpression().accept(this));
+        else {
+            double value = (double) listInsertDeleteCall.getExpression().accept(this).val;
+            int index = (int) value;
+            list.val.remove(index);
+        }
+    }
+
+    public void visit(ListOppCall listOppCall) throws InterpreterException {
+        //TODO add  operations 'add' and 'remove'
+        var variable = (Variable) scope.getVariable(listOppCall.getIdentifier());
+        var list = (ListDef) variable.getValue();
+
+        if (listOppCall.getArrowExpression().getExpression() != null){
+            for (int index = 0; index < list.val.size(); index++) {
+                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                list.val.set(index, listOppCall.getArrowExpression().getExpression().accept(this));
+                scope.remove(listOppCall.getArrowExpression().getArgument());
+            }
+        } else {
+            for (int index = list.val.size() - 1; index > -1; index--){
+                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                if (!visit(listOppCall.getArrowExpression().getCondition())){
+                    scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                    list.val.remove(index);
+                }
+                scope.remove(listOppCall.getArrowExpression().getArgument());
+            }
+        }
     }
 
     public void visit(Block block) throws InterpreterException {
@@ -189,7 +228,6 @@ public class ExecuteVisitor implements Visitor{
             if (returned != null)
                 break;
             instruction.accept(this);
-            System.out.println(instruction);
         }
         scope = scope.parent;
     }

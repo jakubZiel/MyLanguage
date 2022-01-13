@@ -27,7 +27,7 @@ class ExecuteVisitorTest {
 
     @Test
     void visitListDef() throws Exception {
-        String data = "int main(){ int x = 123; int z = 123; list<list<int>> array = [[1, x], [1, f] , [3, 4]]; return 0;}";
+        String data = "int main(){ int x = 123; int z = 123; list<list<int>> array = [[1, x], [1, z] , [3, 4]]; return 0;}";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
@@ -42,7 +42,6 @@ class ExecuteVisitorTest {
         var ASTree = parser.parseBaseCond();
         ExecuteVisitor visitor = new ExecuteVisitor(null);
         var result = visitor.visit(ASTree);
-
     }
 
     @Test
@@ -73,7 +72,7 @@ class ExecuteVisitorTest {
                 " int z = 543;" +
                 " fun(123, 124);" +
                 " return z + y;}";
-        String expected = "Program{functions=[FunctionDeclaration{returnedType=VOID, identifier='fun', parameters=Parameters{signatures=[Signature{type=INT, identifier='x'}, Signature{type=DOUBLE, identifier='f'}]}, body=Block{instructions=[]}}, FunctionDeclaration{returnedType=INT, identifier='main', parameters=Parameters{signatures=[]}, body=Block{instructions=[ReturnInst{returned=DoubleT{val=0.0}}]}}]}";
+
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
@@ -82,12 +81,44 @@ class ExecuteVisitorTest {
     }
 
     @Test
-    void test() throws Exception {
-        String data = "(123 / 12) + (3 / 32) * 3";
-        Parser parser = new Parser(Lexer.lexerFactory(data));
-        var expression = parser.parseExpression();
+    void visitArrowExpression() throws Exception {
+        String data =
+                "int fib(int n){" +
+                    "if (n == 0 || n == 1){"+
+                    "   return n;" +
+                    "};" +
+                    "return fib(n - 1) + fib(n - 2);" +
+                "}" +
 
-        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
-        expression.accept(visitor);
+                "int main()" +
+                    "{" +
+                    "int y = 5;" +
+                    "int z = 10;" +
+                    "list<int> array = [12, y + 23, y * y, 123];" +
+                    "list<int> array2 = [1 , 2 , 3, 4];" +
+                    "list<int> array3 = array + array2;" +
+                    "array3.foreach(u -> u / 2);" +
+                    "array3.filter(t -> t > 12);" +
+                    "int i = 0;" +
+                    "while ( i < 5){" +
+                        "int j = 0;" +
+                        "while (j < 5){" +
+                            "fib(i + j);" +
+                            "j = j + 1;" +
+                        "};" +
+                    "i = i + 1;" +
+                    "};" +
+                    "int cell = array[1];" +
+                    "array3[0] = 6969;" +
+                    "array3.add(2022);" +
+                    "array3.remove(2);" +
+                    "return fib(6) + fib(5) + fib(4);" +
+                "}";
+
+        Parser parser = new Parser(Lexer.lexerFactory(data));
+        var ASTree = parser.parseProgram();
+        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        visitor.visit(ASTree);
+
     }
 }
