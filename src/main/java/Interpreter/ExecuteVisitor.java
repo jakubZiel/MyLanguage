@@ -1,7 +1,6 @@
 package Interpreter;
 
 import ExceptionHandler.Exceptions.InterpreterException;
-import Lexer.Token;
 import Lexer.TokenType;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
@@ -101,6 +100,7 @@ public class ExecuteVisitor implements Visitor{
         var arguments = visit(functionCall.getArguments());
         var argIter = arguments.iterator();
 
+        TypeCheck.check(function.getParameters(), functionCall.getArguments(), this);
         for (var signature : function.getParameters().getSignatures()) {
             functionContext.scope.addVariable(signature.getIdentifier(), argIter.next(), signature.getType());
         }

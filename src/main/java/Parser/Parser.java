@@ -10,7 +10,10 @@ import Parser.Model.Conditions.*;
 import Parser.Model.Expressions.*;
 import Parser.Model.Instructions.*;
 import Parser.Model.Expressions.Type.*;
-import Parser.Model.Nodes.*;
+import Parser.Model.Nodes.Parameters;
+import Parser.Model.Nodes.Identifier;
+import Parser.Model.Nodes.Program;
+import Parser.Model.Nodes.Signature;
 import Parser.Model.Statements.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +38,7 @@ public class Parser {
 
     protected FunctionDeclaration parseFunctionDeclaration() throws Exception {
         Token token = peekToken(0);
-        if (token.tokenIs(INT, DOUBLE, VOID)){
+        if (token.tokenIs(INT, DOUBLE, STRING_T, VOID)){
             getToken();
             match(peekToken(0), IDENTIFIER, "Expected function name");
             Token identifier = getToken();
@@ -65,12 +68,12 @@ public class Parser {
 
     protected Signature parseSignature() throws Exception {
         Token type = getToken();
-        if (type.tokenIs(INT, DOUBLE, LIST)){
+        if (type.tokenIs(INT, DOUBLE, LIST, STRING_T)){
             match(peekToken(0), IDENTIFIER, "Expected identifier");
             Token identifier = getToken();
             return new Signature(type.type, identifier);
         } else
-            throw new ParserException("Expected type INT, DOUBLE, LIST", type.position);
+            throw new ParserException("Expected type INT, DOUBLE, LIST, STRING", type.position);
     }
 
     protected Block parseBlock() throws Exception {
