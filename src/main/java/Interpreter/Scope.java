@@ -1,6 +1,7 @@
 package Interpreter;
 
 import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.TokenType;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.ListDef;
@@ -34,11 +35,12 @@ public class Scope {
         return false;
     }
 
-    public boolean setVariable(String identifier, Literal value){
+    public boolean setVariable(String identifier, Literal value) throws InterpreterException {
          Scope current = this;
          while (current != null) {
              if (current.variables.containsKey(identifier)) {
-                 current.variables.put(identifier, new Variable(identifier, value));
+                 TypeCheck.check(value, current.variables.get(identifier).getDeclaredType());
+                 current.variables.get(identifier).setValue(value);
                 return true;
              }
              current = current.parent;
@@ -92,10 +94,12 @@ public class Scope {
         throw new InterpreterException("Variable with identifier " + identifier + "doesn't exist", null);
     }
 
-    public boolean addVariable(String identifier, Literal value){
+    public boolean addVariable(String identifier, Literal value, TokenType declaredType) throws InterpreterException {
         if (contains(identifier))
             return false;
-        variables.put(identifier, new Variable(identifier, value));
+        TypeCheck.check(value, declaredType);
+
+        variables.put(identifier, new Variable(identifier, value, declaredType));
         return true;
     }
 

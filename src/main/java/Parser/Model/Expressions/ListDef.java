@@ -21,6 +21,11 @@ public class ListDef extends Literal<List<Expression>> implements Visited {
         this.val = elements;
     }
 
+    public ListDef(List<Expression> elements, TokenType elementsType){
+        this.val = elements;
+        this.elementsType = elementsType;
+    }
+
     @Override
     public String toString() {
         return "ListDef{" +
@@ -30,13 +35,22 @@ public class ListDef extends Literal<List<Expression>> implements Visited {
     }
 
     @Override
+    public TokenType getType() {
+        return elementsType;
+    }
+
+    public void setElementsType(TokenType elementsType) {
+        this.elementsType = elementsType;
+    }
+
+    @Override
     public Literal<List<Expression>> accept(Visitor visitor) throws InterpreterException {
         return visitor.visit(this);
     }
 
     @Override
     public Literal<List<Expression>> add(Literal<List<Expression>> operand) {
-        return new ListDef(Stream.concat(val.stream(), operand.val.stream()).collect(Collectors.toList()));
+        return new ListDef(Stream.concat(val.stream(), operand.val.stream()).collect(Collectors.toList()), this.elementsType);
     }
 
     @Override
@@ -59,5 +73,4 @@ public class ListDef extends Literal<List<Expression>> implements Visited {
     public Literal<List<Expression>> modulo(Literal<List<Expression>> operand) throws InterpreterException {
         throw new InterpreterException("Can not modulo" + getClass(), null);
     }
-
 }

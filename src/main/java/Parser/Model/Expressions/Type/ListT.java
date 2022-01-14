@@ -19,5 +19,7 @@ public class ListT {
                 '}';
     }
 
-
+    public TokenType getType() {
+        return type;
+    }
 }

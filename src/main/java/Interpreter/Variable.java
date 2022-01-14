@@ -8,9 +8,10 @@ public class Variable {
     TokenType declaredType;
     private final String identifier;
 
-    public Variable(String identifier, Literal value) {
+    public Variable(String identifier, Literal value, TokenType declaredType) {
         this.value = value;
         this.identifier = identifier;
+        this.declaredType = declaredType;
     }
 
     public Object getValue() {
@@ -23,5 +24,9 @@ public class Variable {
 
     public String getIdentifier() {
         return identifier;
+    }
+
+    public TokenType getDeclaredType() {
+        return declaredType;
     }
 }

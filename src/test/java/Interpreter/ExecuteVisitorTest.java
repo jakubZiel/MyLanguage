@@ -70,7 +70,7 @@ class ExecuteVisitorTest {
                 "int main()" +
                 "{int y = 123;" +
                 " int z = 543;" +
-                " fun(123, 124);" +
+                " fun(123, 124.0);" +
                 " return z + y;}";
 
         Parser parser = new Parser(Lexer.lexerFactory(data));
@@ -119,6 +119,5 @@ class ExecuteVisitorTest {
         var ASTree = parser.parseProgram();
         ExecuteVisitor visitor = new ExecuteVisitor(null);
         visitor.visit(ASTree);
-
     }
 }

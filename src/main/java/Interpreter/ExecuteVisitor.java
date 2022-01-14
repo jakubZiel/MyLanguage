@@ -1,6 +1,7 @@
 package Interpreter;
 
 import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.Token;
 import Lexer.TokenType;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
@@ -31,11 +32,17 @@ public class ExecuteVisitor implements Visitor{
     @Override
     public Literal<List<Expression>> visit(ListDef listDef) throws InterpreterException {
         List<Expression> literals = new ArrayList<>();
+        TokenType elementsType = null;
 
         for (var expression :  listDef.val){
-            literals.add(expression.accept(this));
+            var element = expression.accept(this);
+            if (elementsType != null && !elementsType.equals(element.getType()))
+                throw new InterpreterException("Different type of element in list", null);
+            elementsType = element.getType();
+
+            literals.add(element);
         }
-        return new ListDef(literals);
+        return new ListDef(literals, elementsType);
     }
 
     @Override
@@ -95,7 +102,7 @@ public class ExecuteVisitor implements Visitor{
         var argIter = arguments.iterator();
 
         for (var signature : function.getParameters().getSignatures()) {
-            functionContext.scope.addVariable(signature.getIdentifier(), argIter.next());
+            functionContext.scope.addVariable(signature.getIdentifier(), argIter.next(), signature.getType());
         }
         functionContext.visit(function);
         return functionContext.returned.accept(this);
@@ -146,14 +153,14 @@ public class ExecuteVisitor implements Visitor{
 
     @Override
     public void visit(ListInitInstr listInitInstr) throws InterpreterException {
-        if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this)))
+        if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this), listInitInstr.getNestedType().getType()))
             throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " already exist in this scope", null);
     }
 
     @Override
     public void visit(InitInstr initInstr) throws InterpreterException {
         var value = initInstr.getAssignedValue();
-        if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this)))
+        if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this), initInstr.getType()))
             throw new InterpreterException("Variable " + initInstr.getIdentifier() + " already exist in this scope", null);
     }
 
@@ -196,15 +203,15 @@ public class ExecuteVisitor implements Visitor{
 
         if (listOppCall.getArrowExpression().getExpression() != null){
             for (int index = 0; index < list.val.size(); index++) {
-                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index), list.val.get(0).accept(this).getType());
                 scope.setVariable(listOppCall.getIdentifier(), listOppCall.getArrowExpression().getExpression().accept(this), index);
                 scope.remove(listOppCall.getArrowExpression().getArgument());
             }
         } else {
             for (int index = list.val.size() - 1; index > -1; index--){
-                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index), list.val.get(0).accept(this).getType());
                 if (!visit(listOppCall.getArrowExpression().getCondition())){
-                    scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index));
+                    scope.addVariable(listOppCall.getArrowExpression().getArgument(), scope.getVariable(listOppCall.getIdentifier(), index), list.getType());
                     list.val.remove(index);
                 }
                 scope.remove(listOppCall.getArrowExpression().getArgument());

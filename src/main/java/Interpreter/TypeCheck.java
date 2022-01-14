@@ -3,11 +3,12 @@ package Interpreter;
 import ExceptionHandler.Exceptions.InterpreterException;
 import Lexer.TokenType;
 import Parser.Model.Expressions.Arguments;
+
 import Parser.Model.Expressions.Literal;
 import Parser.Model.Nodes.Parameters;
 
 public class TypeCheck {
-    public void check(Parameters parameters, Arguments arguments, ExecuteVisitor visitor) throws InterpreterException {
+    public static void check(Parameters parameters, Arguments arguments, ExecuteVisitor visitor) throws InterpreterException {
         if (parameters.getSignatures().size() != arguments.arguments.size())
             throw new InterpreterException("Expected " + parameters.getSignatures().size() + " ,but received " + arguments.arguments.size(), null);
 
@@ -19,7 +20,7 @@ public class TypeCheck {
         }
     }
 
-    public <T> void check(Literal<T> assignedValue, TokenType variableType) throws InterpreterException {
+    public static <T> void check(Literal<T> assignedValue, TokenType variableType) throws InterpreterException {
         if (!variableType.equals(assignedValue.getType()))
             throw new InterpreterException("Assigned " + assignedValue.getType() + " to variable of type " + variableType, null);
     }

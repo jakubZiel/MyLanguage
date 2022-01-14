@@ -23,6 +23,10 @@ public class ListInitInstr extends InitInstr{
                 '}';
     }
 
+    public ListT getNestedType() {
+        return nestedType;
+    }
+
     @Override
     public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
         visitor.visit(this);
