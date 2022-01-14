@@ -25,9 +25,13 @@ public class DataSourceIO implements IDataSource{
             return NULL;
         }
 
-        if ((char) consumed == '\n') {
-            current = 0;
-            line++;
+        if ((char) consumed == '\\') {
+            char n = (char) source.read();
+            if (n == 'n') {
+                current = 0;
+                line++;
+                return '\n';
+            }
         } else
             current++;
 

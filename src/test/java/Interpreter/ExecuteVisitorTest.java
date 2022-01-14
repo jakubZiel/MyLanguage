@@ -1,11 +1,8 @@
 package Interpreter;
 
-import DataSource.DataSourceIO;
 import Lexer.Lexer;
 import Parser.Parser;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 class ExecuteVisitorTest {
 

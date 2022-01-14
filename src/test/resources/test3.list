@@ -1,9 +1,66 @@
+string greetings(string name){
+    return "greetings to \n" + name;
+}
+
+int fib(int n){
+    if (n == 1 || n == 0){
+        return n;
+    };
+    return fib(n - 1) + fib(n - 2);
+}
+
 int main(){
+    print(greetings("jakub zielinski\n"));
 
-    int a = -1234;
-    list<int> intList = [1 , 2 , 3 , 4];
-    intList = intList.filter(ele -> ele > 3);
+    int y = 123;
+    int z = 104;
 
-    int result = intList[0] + intList[1];
-    return 0;
+    list<int> array = [12, y + 23, y * y, 123];
+    list<int> array2 = [1 , 2 , 3, 4];
+    list<int> array3 = array + array2;
+
+    print(array3);
+
+    array3.foreach(u -> u / 2);
+    print("\n", array3);
+
+    array3.filter(t -> t > 12);
+
+    print("\n", array3, "\n");
+
+    int i = 0;
+    while (i < 10){
+        int j = 0;
+        while(j < 10){
+            int number = (i + j) % 2;
+            print(number, " ");
+            j = j + 1;
+        };
+        print();
+        i = i + 1;
+    };
+
+    string hello = "hello";
+    string world = "world";
+
+    if (hello != world){
+        print("world different than hello, so concatenate into --> ", hello + " " + world + "\n");
+    };
+
+    i = 0;
+    while (i < 30){
+        print("fib(", i, ") = ", fib(i), "\n");
+        i = i + 1;
+    };
+
+    print("array3[0] == ", array3[0], "\n");
+    array3[0] = 6969;
+    print("array3[0] == ", array3[0], "\n");
+
+    print("array3 == ", array3, "\n");
+    array3.add(2022);
+    array3.remove(1);
+    print("array3 == ", array3, "\n");
+    int z = 3;
+    return fib(4) + fib(5) + fib(6);
 }

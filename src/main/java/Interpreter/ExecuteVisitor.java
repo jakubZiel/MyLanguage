@@ -23,8 +23,9 @@ public class ExecuteVisitor implements Visitor{
     Scope scope;
     Expression returned;
     FunctionCall calledFunction;
-    boolean firstBlock = true;
+    ExecuteVisitor parentContext;
     StdLib library = new StdLib();
+    boolean firstBlock = true;
 
     public ExecuteVisitor(Scope scope) {
         this.scope = scope;
