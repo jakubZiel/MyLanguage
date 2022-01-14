@@ -9,7 +9,7 @@ class ParserTest {
     @Test
     void parseProgram() throws Exception {
         String data = "void fun(int x, double f){} int main(){return 0;}";
-        String expected = "Program{functions=[FunctionDeclaration{returnedType=VOID, identifier='fun', parameters=Parameters{signatures=[Signature{type=INT, identifier='x'}, Signature{type=DOUBLE, identifier='f'}]}, body=Block{instructions=[]}}, FunctionDeclaration{returnedType=INT, identifier='main', parameters=Parameters{signatures=[]}, body=Block{instructions=[ReturnInst{returned=DoubleT{val=0.0}}]}}]}";
+        String expected = "Program{functions=[FunctionDeclaration{returnedType=VOID, identifier='fun', parameters=Parameters{signatures=[Signature{type=INT, identifier='x'}, Signature{type=DOUBLE, identifier='f'}]}, body=Block{instructions=[]}}, FunctionDeclaration{returnedType=INT, identifier='main', parameters=Parameters{signatures=[]}, body=Block{instructions=[ReturnInst{returned=0}]}}]}";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram().toString();

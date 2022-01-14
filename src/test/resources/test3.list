@@ -75,9 +75,5 @@ int main(){
     array3.remove(1);
     print("array3 == ", array3, "\n");
 
-    int xyz = 3;
-
-    xyz = xyz * "hello world";
-
     return fib(4) + fib(5) + fib(6);
 }

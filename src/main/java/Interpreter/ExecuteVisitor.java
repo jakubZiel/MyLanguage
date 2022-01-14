@@ -35,9 +35,10 @@ public class ExecuteVisitor implements Visitor{
         this.scope = scope;
     }
 
-    public ExecuteVisitor(Scope scope, ExecuteVisitor parentContext){
-        this.scope = scope;
-        this.parentContext = parentContext;
+    public static ExecuteVisitor executeVisitorFactory(ExecuteVisitor parentContext){
+        ExecuteVisitor visitor = new ExecuteVisitor(parentContext);
+        visitor.scope = new Scope(null, visitor);
+        return visitor;
     }
 
     public ExecuteVisitor getParentContext() {
@@ -317,11 +318,4 @@ public class ExecuteVisitor implements Visitor{
                 return leftLiteral.moreEqual(rightLiteral);
         }
     }
-
-    public static ExecuteVisitor executeVisitorFactory(ExecuteVisitor parentContext){
-        ExecuteVisitor visitor = new ExecuteVisitor(parentContext);
-        visitor.scope = new Scope(null, visitor);
-        return visitor;
-    }
-
 }
