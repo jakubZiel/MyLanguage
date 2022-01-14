@@ -1,4 +1,4 @@
-package ExceptionHandler.Exceptions;
+package Lexer.ExceptionHandler.Exceptions;
 
 import DataSource.Position;
 

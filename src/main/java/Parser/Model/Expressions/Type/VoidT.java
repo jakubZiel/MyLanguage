@@ -1,6 +1,6 @@
 package Parser.Model.Expressions.Type;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Parser.Model.Expressions.Literal;
 
 public class VoidT extends Literal<Void> {

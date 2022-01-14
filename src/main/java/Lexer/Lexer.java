@@ -1,13 +1,12 @@
 package Lexer;
 
 import DataSource.DataSourceString;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
+import Lexer.ExceptionHandler.Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSourceLine.NULL;
 import static Lexer.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import DataSource.Position;
 
@@ -48,9 +47,6 @@ public class Lexer {
 
         StringBuilder string = new StringBuilder();
         while (true) {
-            if (beg.line != dataSource.getLine() || dataSource.isEOF()) {
-                throw new UnexpectedCharException("unclosed string at " + beg, beg);
-            }
             char nextChar = dataSource.consume();
             if (nextChar == '"') {
                 break;

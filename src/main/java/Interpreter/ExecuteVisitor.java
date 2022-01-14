@@ -1,6 +1,7 @@
 package Interpreter;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import Interpreter.StdLib.StdLib;
 import Lexer.TokenType;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
@@ -23,6 +24,7 @@ public class ExecuteVisitor implements Visitor{
     Expression returned;
     FunctionCall calledFunction;
     boolean firstBlock = true;
+    StdLib library = new StdLib();
 
     public ExecuteVisitor(Scope scope) {
         this.scope = scope;
@@ -93,6 +95,11 @@ public class ExecuteVisitor implements Visitor{
     public <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException {
         calledFunction = functionCall;
         ExecuteVisitor functionContext = new ExecuteVisitor(new Scope(null));
+
+        if (library.checkFor(functionCall.getIdentifier())){
+            return library.execute(functionCall.getIdentifier(), functionCall.getArguments(), this);
+        }
+
         FunctionDeclaration function = functions.get(functionCall.getIdentifier());
         if (function == null)
             throw new InterpreterException("Function " + functionCall.getIdentifier() + " doesn't exist", null);

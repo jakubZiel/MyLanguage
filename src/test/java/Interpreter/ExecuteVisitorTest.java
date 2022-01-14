@@ -1,8 +1,11 @@
 package Interpreter;
 
+import DataSource.DataSourceIO;
 import Lexer.Lexer;
 import Parser.Parser;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 class ExecuteVisitorTest {
 
@@ -17,7 +20,7 @@ class ExecuteVisitorTest {
     }
     @Test
     void visitProgram() throws Exception {
-        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return x + f;} int main(){int y = 123;  fun(0, 0); int z = 543; z = fun(123, 124); return z + y;}";
+        String data = "double fun(int x, double f){ x = 3; f = 123.5; int i = 0; while(i < 10){i = i + 1; int a = 123; a = 245;}; return f + f;} int main(){int y = 123;  fun(0, 0.5); double z = 543.1; z = fun(123, 124.3); return z * 0.3;}";
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
@@ -65,7 +68,7 @@ class ExecuteVisitorTest {
                 " int a = 123;" +
                 " a = 245;" +
                 "} elseif(i > 20){i = i + 10;} else { i = i - 10;};"+
-                " return x + f;" +
+                " return f * f;" +
                 "} " +
                 "int main()" +
                 "{int y = 123;" +
@@ -83,15 +86,18 @@ class ExecuteVisitorTest {
     @Test
     void visitArrowExpression() throws Exception {
         String data =
+                "string greetings(string name){"  +
+                    "return \"greetings to \n\" + name;" +
+                "}" +
                 "int fib(int n){" +
                     "if (n == 0 || n == 1){"+
                     "   return n;" +
                     "};" +
                     "return fib(n - 1) + fib(n - 2);" +
                 "}" +
-
                 "int main()" +
                     "{" +
+                    "print(greetings(\"jakub zielinski\n\n\"));"    +
                     "int y = 5;" +
                     "int z = 10;" +
                     "list<int> array = [12, y + 23, y * y, 123];" +
@@ -103,15 +109,25 @@ class ExecuteVisitorTest {
                     "while ( i < 5){" +
                         "int j = 0;" +
                         "while (j < 5){" +
-                            "fib(i + j);" +
+                            "print(1, \" \");" +
                             "j = j + 1;" +
                         "};" +
+                    "print();" +
                     "i = i + 1;" +
                     "};" +
+                    "string hello = \"hello world\";" +
+                    "string world = \"world world\";" +
+                    "string helloworld = hello + world + hello + world; " +
                     "int cell = array[1];" +
+                    "if (hello != world){" +
+                        "helloworld = hello;" +
+                        "print(\"different\n\");" +
+                        "array3.add(2341);" +
+                    "};" +
                     "array3[0] = 6969;" +
                     "array3.add(2022);" +
                     "array3.remove(2);" +
+                    "print(array3);" +
                     "return fib(6) + fib(5) + fib(4);" +
                 "}";
 

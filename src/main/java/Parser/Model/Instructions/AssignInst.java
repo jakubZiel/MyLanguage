@@ -1,6 +1,6 @@
 package Parser.Model.Instructions;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
@@ -9,8 +9,8 @@ import Parser.Model.Expressions.Literal;
 public class AssignInst extends Instruction{
     private String identifier;
     private Expression assingedValue;
-    public AssignInst(Token identifier, Expression assingedValue) {
-        this.assingedValue = assingedValue;
+    public AssignInst(Token identifier, Expression assignedValue) {
+        this.assingedValue = assignedValue;
         this.identifier = (String) identifier.getValue();
     }
 

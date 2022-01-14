@@ -1,6 +1,6 @@
 package Parser.Model.Expressions;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 
 public class FunctionCall extends Expression {

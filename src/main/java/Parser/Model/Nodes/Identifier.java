@@ -1,15 +1,13 @@
 package Parser.Model.Nodes;
 
-import ExceptionHandler.Exceptions.InterpreterException;
-import Interpreter.Scope;
-import Interpreter.Variable;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Lexer.Token;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.Literal;
 
 public class Identifier extends Expression {
-    private String name;
+    private final String name;
 
     public Identifier(String name) {
         this.name = name;

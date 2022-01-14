@@ -1,7 +1,5 @@
 package Parser.Model.Conditions;
 
-import ExceptionHandler.Exceptions.InterpreterException;
-import Interpreter.Scope;
 import Lexer.TokenType;
 import Parser.Model.Expressions.Expression;
 

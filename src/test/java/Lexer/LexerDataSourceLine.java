@@ -1,6 +1,6 @@
 package Lexer;
 
-import ExceptionHandler.Exceptions.UnexpectedCharException;
+import Lexer.ExceptionHandler.Exceptions.UnexpectedCharException;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package Parser.Model.Statements;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;
@@ -8,8 +8,8 @@ import Parser.Model.Expressions.Literal;
 import Parser.Model.Instructions.Instruction;
 
 public class WhileStatement extends Instruction {
-    private Condition condition;
-    private Block body;
+    private final Condition condition;
+    private final Block body;
 
     public WhileStatement(Condition condition, Block body) {
         this.body = body;

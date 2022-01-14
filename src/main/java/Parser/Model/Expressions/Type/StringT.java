@@ -1,6 +1,6 @@
 package Parser.Model.Expressions.Type;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Lexer.Token;
 import Lexer.TokenType;
 import Parser.Model.Expressions.Literal;
@@ -14,9 +14,7 @@ public class StringT extends Literal<String> {
 
     @Override
     public String toString() {
-        return "StringT{" +
-                "value='" + val + '\'' +
-                '}';
+        return val;
     }
 
     @Override

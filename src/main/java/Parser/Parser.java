@@ -1,6 +1,6 @@
 package Parser;
 
-import ExceptionHandler.Exceptions.ParserException;
+import Lexer.ExceptionHandler.Exceptions.ParserException;
 import Lexer.Token;
 import Lexer.Lexer;
 import static Lexer.TokenType.*;
@@ -113,7 +113,7 @@ public class Parser {
             case LIST:
                 return parseListInitInstr();
             default:
-                if (token.tokenIs(INT, DOUBLE)){
+                if (token.tokenIs(INT, DOUBLE, STRING_T)){
                     return parseInitInstr();
                 } else
                     throw new ParserException("Expected instruction", token.position);

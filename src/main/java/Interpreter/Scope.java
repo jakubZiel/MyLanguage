@@ -1,6 +1,6 @@
 package Interpreter;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Lexer.TokenType;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Expressions.Expression;

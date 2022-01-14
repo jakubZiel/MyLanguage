@@ -1,5 +1,5 @@
 package DataSource;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
+import Lexer.ExceptionHandler.Exceptions.UnexpectedCharException;
 import Lexer.Lexer;
 
 import static DataSource.DataSourceLine.NULL;

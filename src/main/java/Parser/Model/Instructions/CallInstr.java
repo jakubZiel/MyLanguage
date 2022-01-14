@@ -1,6 +1,6 @@
 package Parser.Model.Instructions;
 
-import ExceptionHandler.Exceptions.InterpreterException;
+import Lexer.ExceptionHandler.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Expressions.ArrayCall;
 import Parser.Model.Expressions.FunctionCall;
