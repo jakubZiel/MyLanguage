@@ -1,6 +1,6 @@
 package Parser.Model.Statements;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Conditions.Condition;

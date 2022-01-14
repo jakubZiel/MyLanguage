@@ -1,6 +1,6 @@
 package Parser;
 
-import Lexer.ExceptionHandler.Exceptions.ParserException;
+import ExceptionHandling.Exceptions.ParserException;
 import Lexer.Token;
 import Lexer.Lexer;
 import static Lexer.TokenType.*;

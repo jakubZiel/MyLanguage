@@ -1,11 +1,11 @@
 package Parser.Model.Expressions;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 
 public class FunctionCall extends Expression {
-    private String identifier;
-    private Arguments arguments;
+    private final String identifier;
+    private final Arguments arguments;
 
     public FunctionCall(String identifier, Arguments arguments) {
         this.identifier = identifier;

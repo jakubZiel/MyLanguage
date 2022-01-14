@@ -1,6 +1,6 @@
 package Interpreter;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.StdLib.StdLib;
 import Lexer.TokenType;
 import Parser.Model.Blocks.Block;
@@ -27,8 +27,25 @@ public class ExecuteVisitor implements Visitor{
     StdLib library = new StdLib();
     boolean firstBlock = true;
 
+    public ExecuteVisitor(ExecuteVisitor parentContext){
+        this.parentContext = parentContext;
+    }
+
     public ExecuteVisitor(Scope scope) {
         this.scope = scope;
+    }
+
+    public ExecuteVisitor(Scope scope, ExecuteVisitor parentContext){
+        this.scope = scope;
+        this.parentContext = parentContext;
+    }
+
+    public ExecuteVisitor getParentContext() {
+        return parentContext;
+    }
+
+    public FunctionCall getCalledFunction() {
+        return calledFunction;
     }
 
     @Override
@@ -39,7 +56,7 @@ public class ExecuteVisitor implements Visitor{
         for (var expression :  listDef.val){
             var element = expression.accept(this);
             if (elementsType != null && !elementsType.equals(element.getType()))
-                throw new InterpreterException("Different type of element in list", null);
+                throw new InterpreterException("Different type of element in list", this);
             elementsType = element.getType();
 
             literals.add(element);
@@ -85,6 +102,7 @@ public class ExecuteVisitor implements Visitor{
 
     public void visit(Program program) throws InterpreterException {
         Scope.setFunctions(program);
+        calledFunction = new FunctionCall("App", null);
 
         if (program.getFunctions()
                 .stream()
@@ -94,8 +112,9 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException {
-        calledFunction = functionCall;
-        ExecuteVisitor functionContext = new ExecuteVisitor(new Scope(null));
+        ExecuteVisitor functionContext = ExecuteVisitor.executeVisitorFactory(this);
+
+        functionContext.calledFunction = functionCall;
 
         if (library.checkFor(functionCall.getIdentifier())){
             return library.execute(functionCall.getIdentifier(), functionCall.getArguments(), this);
@@ -103,12 +122,13 @@ public class ExecuteVisitor implements Visitor{
 
         FunctionDeclaration function = functions.get(functionCall.getIdentifier());
         if (function == null)
-            throw new InterpreterException("Function " + functionCall.getIdentifier() + " doesn't exist", null);
+            throw new InterpreterException("Function " + functionCall.getIdentifier() + " doesn't exist", this);
 
         var arguments = visit(functionCall.getArguments());
         var argIter = arguments.iterator();
 
         TypeCheck.check(function.getParameters(), functionCall.getArguments(), this);
+
         for (var signature : function.getParameters().getSignatures()) {
             functionContext.scope.addVariable(signature.getIdentifier(), argIter.next(), signature.getType());
         }
@@ -121,7 +141,6 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(WhileStatement whileStatement) throws InterpreterException {
-        var condition = whileStatement.getCondition();
         var body = whileStatement.getBody();
 
         while (visit(whileStatement.getCondition()) && returned == null){
@@ -156,20 +175,20 @@ public class ExecuteVisitor implements Visitor{
     @Override
     public void visit(AssignInst assignInst) throws InterpreterException {
         if (!scope.setVariable( assignInst.getIdentifier(), assignInst.getAssignedValue().accept(this)))
-            throw new InterpreterException("Variable " + assignInst.getIdentifier() + " doesn't exist in this context", null);
+            throw new InterpreterException("Variable " + assignInst.getIdentifier() + " doesn't exist in this context", this);
     }
 
     @Override
     public void visit(ListInitInstr listInitInstr) throws InterpreterException {
         if (!scope.addVariable( listInitInstr.getIdentifier(), listInitInstr.getAssignedValue().accept(this), listInitInstr.getNestedType().getType()))
-            throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " already exist in this scope", null);
+            throw new InterpreterException("Variable " + listInitInstr.getIdentifier() + " already exist in this scope", this);
     }
 
     @Override
     public void visit(InitInstr initInstr) throws InterpreterException {
         var value = initInstr.getAssignedValue();
         if (!scope.addVariable(initInstr.getIdentifier(), value.accept(this), initInstr.getType()))
-            throw new InterpreterException("Variable " + initInstr.getIdentifier() + " already exist in this scope", null);
+            throw new InterpreterException("Variable " + initInstr.getIdentifier() + " already exist in this scope", this);
     }
 
     public <T> Literal<T> visit(CallInstr callInstr) throws InterpreterException {
@@ -185,8 +204,7 @@ public class ExecuteVisitor implements Visitor{
         int index = (int) arrayCall.getIndex().accept(this).val;
 
         if (arrayCall.getAssignedValue() == null) {
-            //TODO - change result value of getVariable to Literal<T>
-            return (Literal<T>) scope.getVariable(arrayCall.getIdentifier(), index);
+            return scope.getVariable(arrayCall.getIdentifier(), index);
         }
         scope.setVariable(arrayCall.getIdentifier(), arrayCall.getAssignedValue().accept(this), index);
         return null;
@@ -228,11 +246,10 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(Block block) throws InterpreterException {
-        //TODO don't create new scope when entering new block after function call
         if (firstBlock)
             firstBlock = false;
         else
-            scope = new Scope(scope);
+            scope = new Scope(scope, this);
 
         for (var instruction : block.getInstructions()){
             if (returned != null)
@@ -283,7 +300,7 @@ public class ExecuteVisitor implements Visitor{
         var rightLiteral = comparison.getRight().accept(this);
 
         if (leftLiteral.getClass() != rightLiteral.getClass())
-            throw new InterpreterException("Can not compare " + leftLiteral.getClass() + " and " + rightLiteral.getClass(), null);
+            throw new InterpreterException("Can not compare " + leftLiteral.getClass() + " and " + rightLiteral.getClass(), this);
 
         switch (comparison.getOperator()) {
             case EQUAL:
@@ -300,4 +317,11 @@ public class ExecuteVisitor implements Visitor{
                 return leftLiteral.moreEqual(rightLiteral);
         }
     }
+
+    public static ExecuteVisitor executeVisitorFactory(ExecuteVisitor parentContext){
+        ExecuteVisitor visitor = new ExecuteVisitor(parentContext);
+        visitor.scope = new Scope(null, visitor);
+        return visitor;
+    }
+
 }

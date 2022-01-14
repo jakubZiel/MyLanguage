@@ -1,8 +1,8 @@
 import DataSource.DataSourceIO;
 import DataSource.IDataSource;
+import ExceptionHandling.Exceptions.LanguageException;
 import Interpreter.ExecuteVisitor;
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
-import Lexer.ExceptionHandler.Exceptions.ParserException;
+import Interpreter.Scope;
 import Lexer.Lexer;
 import Parser.Model.Nodes.Program;
 import Parser.Parser;
@@ -19,15 +19,13 @@ public class App {
             IDataSource dataSource = new DataSourceIO(args[0]);
             Lexer lexer = new Lexer(dataSource);
             Parser parser = new Parser(lexer);
-            ExecuteVisitor visitor = new ExecuteVisitor(null);
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
             Program program = parser.parseProgram();
 
             visitor.visit(program);
         }
-        catch (InterpreterException e){
-            System.err.println(e.message);
-        } catch(ParserException e) {
-            System.err.println(e.message);
+        catch (LanguageException e){
+            e.printErrorMessage();
         } catch(Exception e){
             e.printStackTrace();
         }

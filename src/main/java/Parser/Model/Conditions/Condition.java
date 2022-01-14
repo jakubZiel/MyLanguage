@@ -1,6 +1,6 @@
 package Parser.Model.Conditions;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.Visited;
 import Interpreter.Visitor;
 import Lexer.TokenType;
@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Condition implements Visited {
-    private List<Condition> conditions;
-    private List<TokenType> operators;
+    private final List<Condition> conditions;
+    private final List<TokenType> operators;
 
     public Condition() {
         this.conditions = new LinkedList<>();

@@ -2,7 +2,7 @@ package Lexer;
 
 import DataSource.DataSourceString;
 import DataSource.IDataSource;
-import Lexer.ExceptionHandler.Exceptions.UnexpectedCharException;
+import ExceptionHandling.Exceptions.UnexpectedCharException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

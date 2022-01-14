@@ -1,6 +1,6 @@
 package Interpreter;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Lexer.TokenType;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Expressions.Expression;
@@ -15,6 +15,12 @@ public class Scope {
     public static HashMap<String, FunctionDeclaration> functions = new HashMap<>();
     Scope parent;
     HashMap<String, Variable> variables = new HashMap<>();
+    ExecuteVisitor functionCallContext;
+
+    public Scope(Scope parent, ExecuteVisitor functionCallContext){
+        this.parent = parent;
+        this.functionCallContext = functionCallContext;
+    }
 
     public Scope(Scope parent){
         this.parent = parent;
@@ -39,7 +45,7 @@ public class Scope {
          Scope current = this;
          while (current != null) {
              if (current.variables.containsKey(identifier)) {
-                 TypeCheck.check(value, current.variables.get(identifier).getDeclaredType());
+                 TypeCheck.check(value, current.variables.get(identifier).getDeclaredType(), functionCallContext);
                  current.variables.get(identifier).setValue(value);
                 return true;
              }
@@ -55,7 +61,7 @@ public class Scope {
                 var list = getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
-                    throw new InterpreterException("Object is not an array", null);
+                    throw new InterpreterException("Object is not an array", functionCallContext);
 
                 ListDef listObj = (ListDef) list.getValue();
                 listObj.val.set(index, value);
@@ -74,7 +80,7 @@ public class Scope {
                 var list = getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
-                    throw new InterpreterException("Object is not an array", null);
+                    throw new InterpreterException("Object is not an array", functionCallContext);
                     ListDef listObj = (ListDef) list.getValue();
 
                     return (Literal) listObj.val.get(index);
@@ -91,13 +97,13 @@ public class Scope {
                 return current.variables.get(identifier);
             current = current.parent;
         }
-        throw new InterpreterException("Variable with identifier " + identifier + "doesn't exist", null);
+        throw new InterpreterException("Variable with identifier " + identifier + " doesn't exist", functionCallContext);
     }
 
     public boolean addVariable(String identifier, Literal value, TokenType declaredType) throws InterpreterException {
         if (contains(identifier))
             return false;
-        TypeCheck.check(value, declaredType);
+        TypeCheck.check(value, declaredType, functionCallContext);
 
         variables.put(identifier, new Variable(identifier, value, declaredType));
         return true;

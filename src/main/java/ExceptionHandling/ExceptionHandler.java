@@ -1,4 +1,4 @@
-package Lexer.ExceptionHandler;
+package ExceptionHandling;
 
 public class ExceptionHandler {
 

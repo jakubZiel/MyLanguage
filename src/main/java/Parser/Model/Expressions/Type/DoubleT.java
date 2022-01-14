@@ -1,6 +1,6 @@
 package Parser.Model.Expressions.Type;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Lexer.TokenType;
 import Parser.Model.Expressions.Literal;
 

@@ -1,6 +1,6 @@
 package Parser.Model.Instructions;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Lexer.Token;
 import Lexer.TokenType;
@@ -8,9 +8,9 @@ import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.Literal;
 
 public class InitInstr extends Instruction{
-    private TokenType type;
-    private String identifier;
-    private Expression assignedValue;
+    private final TokenType type;
+    private final String identifier;
+    private final Expression assignedValue;
 
     public InitInstr(TokenType type, Token identifier, Expression assignedValue) {
         this.type = type;

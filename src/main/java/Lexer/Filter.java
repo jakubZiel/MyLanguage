@@ -1,6 +1,6 @@
 package Lexer;
 
-import Lexer.ExceptionHandler.Exceptions.UnexpectedCharException;
+import ExceptionHandling.Exceptions.UnexpectedCharException;
 
 import java.io.IOException;
 

@@ -9,6 +9,19 @@ int fib(int n){
     return fib(n - 1) + fib(n - 2);
 }
 
+void fun1(){
+    fun2();
+}
+
+void fun2(){
+    fun3();
+}
+
+void fun3(){
+    int x = 12;
+    int x = 123;
+}
+
 int main(){
     print(greetings("jakub zielinski\n"));
 
@@ -61,6 +74,10 @@ int main(){
     array3.add(2022);
     array3.remove(1);
     print("array3 == ", array3, "\n");
-    int z = 3;
+
+    int xyz = 3;
+
+    xyz = xyz * "hello world";
+
     return fib(4) + fib(5) + fib(6);
 }

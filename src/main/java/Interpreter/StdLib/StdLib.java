@@ -1,6 +1,6 @@
 package Interpreter.StdLib;
 
-import Lexer.ExceptionHandler.Exceptions.InterpreterException;
+import ExceptionHandling.Exceptions.InterpreterException;
 import Interpreter.ExecuteVisitor;
 import Parser.Model.Expressions.Arguments;
 import Parser.Model.Expressions.Literal;

@@ -21,7 +21,7 @@ class ExecuteVisitorTest {
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         visitor.visit(ASTree);
     }
 
@@ -31,7 +31,7 @@ class ExecuteVisitorTest {
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         visitor.visit(ASTree);
     }
 
@@ -40,7 +40,7 @@ class ExecuteVisitorTest {
         String data = "41 + 23 != (41 + 1) * 21";
         Parser parser = new Parser(Lexer.lexerFactory(data));
         var ASTree = parser.parseBaseCond();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         var result = visitor.visit(ASTree);
     }
 
@@ -49,7 +49,7 @@ class ExecuteVisitorTest {
         String data = "15 > 12 && 0 < 2";
         Parser parser = new Parser(Lexer.lexerFactory(data));
         var ASTree = parser.parseCondition();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         var result = visitor.visit(ASTree);
     }
 
@@ -76,7 +76,7 @@ class ExecuteVisitorTest {
         Parser parser = new Parser(Lexer.lexerFactory(data));
 
         var ASTree = parser.parseProgram();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         visitor.visit(ASTree);
     }
 
@@ -130,7 +130,7 @@ class ExecuteVisitorTest {
 
         Parser parser = new Parser(Lexer.lexerFactory(data));
         var ASTree = parser.parseProgram();
-        ExecuteVisitor visitor = new ExecuteVisitor(null);
+        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         visitor.visit(ASTree);
     }
 }
