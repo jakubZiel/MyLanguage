@@ -1,16 +1,15 @@
 import DataSource.DataSourceIO;
 import DataSource.IDataSource;
-import ExceptionHandling.Exceptions.LanguageException;
+import Exceptions.LanguageException;
 import Interpreter.ExecuteVisitor;
 import Interpreter.Scope;
 import Lexer.Lexer;
 import Parser.Model.Nodes.Program;
 import Parser.Parser;
 
-import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Wrong number of parameters, expected .list file path.");
             return;

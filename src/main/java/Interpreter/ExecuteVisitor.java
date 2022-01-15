@@ -1,6 +1,6 @@
 package Interpreter;
 
-import ExceptionHandling.Exceptions.InterpreterException;
+import Exceptions.InterpreterException;
 import Interpreter.StdLib.StdLib;
 import Lexer.TokenType;
 import Parser.Model.Blocks.Block;

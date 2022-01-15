@@ -2,7 +2,7 @@ package UnitTests;
 
 import DataSource.DataSourceString;
 import DataSource.IDataSource;
-import ExceptionHandling.Exceptions.UnexpectedCharException;
+import Exceptions.UnexpectedCharException;
 import Lexer.Lexer;
 import static Lexer.Lexer.*;
 import org.junit.jupiter.api.Test;

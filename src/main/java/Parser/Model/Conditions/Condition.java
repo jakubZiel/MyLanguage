@@ -1,6 +1,6 @@
 package Parser.Model.Conditions;
 
-import ExceptionHandling.Exceptions.InterpreterException;
+import Exceptions.InterpreterException;
 import Interpreter.Visited;
 import Interpreter.Visitor;
 import Lexer.TokenType;

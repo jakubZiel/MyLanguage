@@ -1,6 +1,6 @@
 package Interpreter;
 
-import ExceptionHandling.Exceptions.InterpreterException;
+import Exceptions.InterpreterException;
 import Parser.Model.Expressions.Literal;
 
 public interface Visited {

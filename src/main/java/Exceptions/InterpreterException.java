@@ -1,4 +1,4 @@
-package ExceptionHandling.Exceptions;
+package Exceptions;
 
 import Interpreter.ExecuteVisitor;
 

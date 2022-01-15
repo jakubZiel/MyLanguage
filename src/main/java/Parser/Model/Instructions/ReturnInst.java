@@ -1,6 +1,6 @@
 package Parser.Model.Instructions;
 
-import ExceptionHandling.Exceptions.InterpreterException;
+import Exceptions.InterpreterException;
 import Interpreter.Visitor;
 import Parser.Model.Expressions.Expression;
 import Parser.Model.Expressions.Literal;

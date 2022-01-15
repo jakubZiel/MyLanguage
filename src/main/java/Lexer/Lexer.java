@@ -1,7 +1,7 @@
 package Lexer;
 
 import DataSource.DataSourceString;
-import ExceptionHandling.Exceptions.UnexpectedCharException;
+import Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSourceLine.NULL;
 import static Lexer.TokenType.*;

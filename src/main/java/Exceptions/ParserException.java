@@ -1,16 +1,15 @@
-package ExceptionHandling.Exceptions;
+package Exceptions;
 
 import DataSource.Position;
 
-public class UnexpectedCharException extends LanguageException{
+public class ParserException extends LanguageException{
     public final String message;
     public final Position position;
 
-    public UnexpectedCharException (String message, Position position) {
+    public ParserException (String message, Position position) {
         this.message = message;
         this.position = position;
     }
-
 
     @Override
     public void printErrorMessage() {
@@ -18,4 +17,3 @@ public class UnexpectedCharException extends LanguageException{
         System.err.println(position);
     }
 }
-

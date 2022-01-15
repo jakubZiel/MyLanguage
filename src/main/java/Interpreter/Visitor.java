@@ -1,6 +1,6 @@
 package Interpreter;
 
-import ExceptionHandling.Exceptions.InterpreterException;
+import Exceptions.InterpreterException;
 import Parser.Model.Blocks.Block;
 import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Conditions.Comparison;
