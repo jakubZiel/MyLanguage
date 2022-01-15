@@ -68,7 +68,7 @@ class LexerDataSourceLine {
                 RETURN, NUMBER_T, SEMICOLON,
                 CURLY_R, END_T
         );
-        assertEquals(tokens, getTokenTypes(root + "/src/test/resources/test3.list"));
+        assertEquals(tokens, getTokenTypes(root + "/src/test/resources/test.list"));
     }
     /*
     @Test
@@ -99,7 +99,7 @@ class LexerDataSourceLine {
                 "}",
                 "\0"
         );
-        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test3.list"));
+        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test.list"));
     }
      */
 }

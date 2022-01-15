@@ -8,6 +8,7 @@ import Parser.Model.Blocks.FunctionDeclaration;
 import Parser.Model.Conditions.Comparison;
 import Parser.Model.Conditions.Condition;
 import Parser.Model.Expressions.*;
+import Parser.Model.Expressions.Type.VoidT;
 import Parser.Model.Instructions.*;
 import Parser.Model.Nodes.Identifier;
 import Parser.Model.Nodes.Program;
@@ -112,7 +113,7 @@ public class ExecuteVisitor implements Visitor{
         }
     }
 
-    public <T> Literal<T> visit(FunctionCall functionCall) throws InterpreterException {
+    public Literal visit(FunctionCall functionCall) throws InterpreterException {
         ExecuteVisitor functionContext = ExecuteVisitor.executeVisitorFactory(this);
 
         functionContext.calledFunction = functionCall;
@@ -128,12 +129,17 @@ public class ExecuteVisitor implements Visitor{
         var arguments = visit(functionCall.getArguments());
         var argIter = arguments.iterator();
 
-        TypeCheck.check(function.getParameters(), functionCall.getArguments(), this);
+        TypeCheck.check(function.getParameters(), functionCall, this);
 
         for (var signature : function.getParameters().getSignatures()) {
             functionContext.scope.addVariable(signature.getIdentifier(), argIter.next(), signature.getType());
         }
         functionContext.visit(function);
+
+        if (functionContext.returned == null)
+            functionContext.returned = new VoidT();
+
+        TypeCheck.check(functionContext.returned.accept(this), function.getReturnedType(), this);
         return functionContext.returned.accept(this);
     }
 

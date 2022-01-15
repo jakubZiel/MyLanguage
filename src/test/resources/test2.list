@@ -1,5 +1,0 @@
-void main(int i, int j){
-
-    print("hello \"world\"") ;
-    int ij = i + j;
-}

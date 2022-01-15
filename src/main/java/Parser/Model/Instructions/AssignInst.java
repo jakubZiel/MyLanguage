@@ -8,9 +8,9 @@ import Parser.Model.Expressions.Literal;
 
 public class AssignInst extends Instruction{
     private final String identifier;
-    private final Expression assingedValue;
+    private final Expression assignedValue;
     public AssignInst(Token identifier, Expression assignedValue) {
-        this.assingedValue = assignedValue;
+        this.assignedValue = assignedValue;
         this.identifier = (String) identifier.getValue();
     }
 
@@ -18,7 +18,7 @@ public class AssignInst extends Instruction{
     public String toString() {
         return "AssignInst{" +
                 "identifier='" + identifier + '\'' +
-                ", assignedValue=" + assingedValue +
+                ", assignedValue=" + assignedValue +
                 '}';
     }
 
@@ -27,7 +27,7 @@ public class AssignInst extends Instruction{
     }
 
     public Expression getAssignedValue() {
-        return assingedValue;
+        return assignedValue;
     }
 
 

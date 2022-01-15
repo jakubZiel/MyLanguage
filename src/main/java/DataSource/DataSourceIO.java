@@ -25,10 +25,17 @@ public class DataSourceIO implements IDataSource{
             return NULL;
         }
 
+        char consumed_char = (char) consumed;
+        if ((char) consumed == '\n') {
+            line++;
+            current = 0;
+            return '\n';
+        }
+
         if ((char) consumed == '\\') {
-            char n = (char) source.read();
+            char n = peek();
             if (n == 'n') {
-                current = 0;
+                var nRead = source.read();
                 line++;
                 return '\n';
             }

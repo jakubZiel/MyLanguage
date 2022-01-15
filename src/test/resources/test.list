@@ -16,17 +16,31 @@ void fun1(){
 void fun2(){
     fun3();
 }
+#hello world
+int fun3(){
+    int x = 43;
 
-void fun3(){
-    int x = 12;
-    int x = 123;
+    if (x == 3){
+        print("x == 3");
+    } else {
+
+        if (x == 4){
+            print("x == 4");
+        } else {
+            print("x != 4 && x != 3");
+        };
+    };
+
+    return x;
 }
 
 int main(){
     print(greetings("jakub zielinski\n"));
+    fun1();
 
     int y = 123;
     int z = 104;
+    string someString = greetings("hello");
 
     list<int> array = [12, y + 23, y * y, 123];
     list<int> array2 = [1 , 2 , 3, 4];

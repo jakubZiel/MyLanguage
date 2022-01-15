@@ -36,12 +36,13 @@ public class Lexer {
         } else if (isSpecial(character)) {
             return parseSpecial();
         } else if (character == '#') {
-            return parseComment();
+            parseComment();
+            return scanToken();
         }
         throw new IllegalArgumentException();
     }
 
-    private Token parseString() throws IOException, UnexpectedCharException {
+    private Token parseString() throws IOException {
         Position beg = dataSource.getCurrentPos();
         dataSource.consume();
 
@@ -119,13 +120,12 @@ public class Lexer {
         return new Token(SINGLE_SPECIAL.get(String.valueOf(firstChar)), dataSource.getCurrentPos(),  String.valueOf(firstChar));
     }
 
-    private Token parseComment() throws IOException {
+    private void parseComment() throws IOException {
         int begLine = dataSource.getLine();
 
         while (!dataSource.isEOF() && begLine == dataSource.getLine()){
             dataSource.consume();
         }
-        return new Token(COMMENT_T, dataSource.getCurrentPos(), "comment");
     }
 
     private boolean isSpecial(char character) {

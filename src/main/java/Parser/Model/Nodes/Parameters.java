@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Parameters {
-    private List<Signature> signatures;
+    private final List<Signature> signatures;
 
     public Parameters(){
         signatures = new LinkedList<>();

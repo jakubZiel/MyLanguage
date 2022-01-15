@@ -101,8 +101,9 @@ public class Scope {
     }
 
     public boolean addVariable(String identifier, Literal value, TokenType declaredType) throws InterpreterException {
-        if (contains(identifier))
+        if (variables.containsKey(identifier))
             return false;
+
         TypeCheck.check(value, declaredType, functionCallContext);
 
         variables.put(identifier, new Variable(identifier, value, declaredType));
