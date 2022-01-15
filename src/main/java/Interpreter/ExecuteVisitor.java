@@ -16,11 +16,11 @@ import Parser.Model.Statements.IfStatement;
 import Parser.Model.Statements.WhileStatement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static Interpreter.Scope.functions;
-
 public class ExecuteVisitor implements Visitor{
+    HashMap<String, FunctionDeclaration> functions;
     Scope scope;
     Expression returned;
     FunctionCall calledFunction;
@@ -39,6 +39,7 @@ public class ExecuteVisitor implements Visitor{
     public static ExecuteVisitor executeVisitorFactory(ExecuteVisitor parentContext){
         ExecuteVisitor visitor = new ExecuteVisitor(parentContext);
         visitor.scope = new Scope(null, visitor);
+        visitor.functions = parentContext.functions;
         return visitor;
     }
 
@@ -103,7 +104,8 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(Program program) throws InterpreterException {
-        Scope.setFunctions(program);
+        functions = Scope.getFunctions(program);
+
         calledFunction = new FunctionCall("App", null);
 
         if (program.getFunctions()
@@ -115,8 +117,8 @@ public class ExecuteVisitor implements Visitor{
 
     public Literal visit(FunctionCall functionCall) throws InterpreterException {
         ExecuteVisitor functionContext = ExecuteVisitor.executeVisitorFactory(this);
-
         functionContext.calledFunction = functionCall;
+
 
         if (library.checkFor(functionCall.getIdentifier())){
             return library.execute(functionCall.getIdentifier(), functionCall.getArguments(), this);

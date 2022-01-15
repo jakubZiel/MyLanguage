@@ -11,8 +11,6 @@ import Parser.Model.Nodes.Program;
 import java.util.HashMap;
 
 public class Scope {
-    //TODO should be removed from global scope. Functions can be attached to every ExecuteVisitor as a reference field
-    public static HashMap<String, FunctionDeclaration> functions = new HashMap<>();
     Scope parent;
     HashMap<String, Variable> variables = new HashMap<>();
     ExecuteVisitor functionCallContext;
@@ -26,9 +24,11 @@ public class Scope {
         this.parent = parent;
     }
 
-    public static void setFunctions(Program program){
+    public static HashMap<String, FunctionDeclaration> getFunctions(Program program){
+        HashMap<String, FunctionDeclaration> functions = new HashMap<>();
         for (var function : program.getFunctions())
             functions.put(function.getIdentifier(), function);
+        return functions;
     }
 
     public boolean contains(String identifier){

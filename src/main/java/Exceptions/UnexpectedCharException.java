@@ -11,7 +11,6 @@ public class UnexpectedCharException extends LanguageException{
         this.position = position;
     }
 
-
     @Override
     public void printErrorMessage() {
         System.err.println(message);
