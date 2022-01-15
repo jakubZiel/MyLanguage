@@ -24,8 +24,6 @@ public class DataSourceIO implements IDataSource{
             EOF = true;
             return NULL;
         }
-
-        char consumed_char = (char) consumed;
         if ((char) consumed == '\n') {
             line++;
             current = 0;
@@ -72,15 +70,5 @@ public class DataSourceIO implements IDataSource{
     @Override
     public Position getCurrentPos() {
         return new Position(line, current);
-    }
-
-    public static void main(String[] args) throws IOException, UnexpectedCharException {
-        var src = new DataSourceIO("/media/jzielins/SD/sem6/TKOM/project/src/test/resources/test2.list");
-        Lexer l = new Lexer(src);
-        Object tok;
-        while(!src.isEOF()){
-             tok = l.scanToken().type;
-            System.out.println(tok);
-        }
     }
 }
