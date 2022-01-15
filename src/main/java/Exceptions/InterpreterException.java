@@ -18,7 +18,7 @@ public class InterpreterException extends LanguageException {
     @Override
     public void printErrorMessage() {
         ExecuteVisitor current = lastContext;
-        System.err.println(message);
+        System.err.println("\n\n" + message);
         while (current != null){
             System.err.println("at " + current.getCalledFunction().getIdentifier());
             current = current.getParentContext();
