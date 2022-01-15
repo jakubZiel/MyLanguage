@@ -48,8 +48,6 @@ int main(){
     int z = 104;
     string someString = greetings("hello");
 
-    int f = fun2();
-
     list<int> array = [12, y + 23, y * y, 123];
     list<int> array2 = [1 , 2 , 3, 4];
     list<int> array3 = array + array2;
@@ -97,5 +95,5 @@ int main(){
     array3.remove(1);
     print("array3 == ", array3, "\n");
 
-    return fib(4) + fib(5) + fib(6);
+    return 0;
 }

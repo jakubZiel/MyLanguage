@@ -1,6 +1,4 @@
 package DataSource;
-import Exceptions.UnexpectedCharException;
-import Lexer.Lexer;
 
 import static DataSource.DataSourceLine.NULL;
 import java.io.*;

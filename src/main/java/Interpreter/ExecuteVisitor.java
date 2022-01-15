@@ -105,7 +105,6 @@ public class ExecuteVisitor implements Visitor{
 
     public void visit(Program program) throws InterpreterException {
         functions = Scope.getFunctions(program);
-
         calledFunction = new FunctionCall("App", null);
 
         if (program.getFunctions()
