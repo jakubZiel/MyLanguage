@@ -15,23 +15,23 @@ public class Scope {
     HashMap<String, Variable> variables = new HashMap<>();
     ExecuteVisitor functionCallContext;
 
-    public Scope(Scope parent, ExecuteVisitor functionCallContext){
+    public Scope(Scope parent, ExecuteVisitor functionCallContext) {
         this.parent = parent;
         this.functionCallContext = functionCallContext;
     }
 
-    public Scope(Scope parent){
+    public Scope(Scope parent) {
         this.parent = parent;
     }
 
-    public static HashMap<String, FunctionDeclaration> getFunctions(Program program){
+    public static HashMap<String, FunctionDeclaration> getFunctions(Program program) {
         HashMap<String, FunctionDeclaration> functions = new HashMap<>();
         for (var function : program.getFunctions())
             functions.put(function.getIdentifier(), function);
         return functions;
     }
 
-    public boolean contains(String identifier){
+    public boolean contains(String identifier) {
         Scope current = this;
         while (current != null) {
             if (current.variables.containsKey(identifier))
@@ -42,16 +42,16 @@ public class Scope {
     }
 
     public boolean setVariable(String identifier, Literal value) throws InterpreterException {
-         Scope current = this;
-         while (current != null) {
-             if (current.variables.containsKey(identifier)) {
-                 TypeCheck.check(value, current.variables.get(identifier).getDeclaredType(), functionCallContext);
-                 current.variables.get(identifier).setValue(value);
+        Scope current = this;
+        while (current != null) {
+            if (current.variables.containsKey(identifier)) {
+                TypeCheck.check(value, current.variables.get(identifier).getDeclaredType(), functionCallContext);
+                current.variables.get(identifier).setValue(value);
                 return true;
-             }
-             current = current.parent;
-         }
-         return false;
+            }
+            current = current.parent;
+        }
+        return false;
     }
 
     public boolean setVariable(String identifier, Expression value, int index) throws InterpreterException {
@@ -76,18 +76,18 @@ public class Scope {
         Scope current = this;
 
         while (current != null) {
-            if (current.variables.containsKey(identifier)){
+            if (current.variables.containsKey(identifier)) {
                 var list = getVariable(identifier);
 
                 if (!(list.getValue() instanceof ListDef))
                     throw new InterpreterException("Object is not an array", functionCallContext);
-                    ListDef listObj = (ListDef) list.getValue();
+                ListDef listObj = (ListDef) list.getValue();
 
-                    return (Literal) listObj.val.get(index);
+                return (Literal) listObj.val.get(index);
             } else
                 current = current.parent;
         }
-        throw new InterpreterException("Variable " + identifier+ " doesn't exist", null);
+        throw new InterpreterException("Variable " + identifier + " doesn't exist", null);
     }
 
     public Variable getVariable(String identifier) throws InterpreterException {
@@ -101,7 +101,7 @@ public class Scope {
     }
 
     public boolean addVariable(String identifier, Literal value, TokenType declaredType) throws InterpreterException {
-        if (variables.containsKey(identifier))
+        if (contains(identifier))
             return false;
 
         TypeCheck.check(value, declaredType, functionCallContext);
@@ -110,7 +110,7 @@ public class Scope {
         return true;
     }
 
-    public void remove(String identifier){
+    public void remove(String identifier) {
         variables.remove(identifier);
     }
 }

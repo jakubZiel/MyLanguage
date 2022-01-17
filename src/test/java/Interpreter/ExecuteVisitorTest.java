@@ -1,5 +1,6 @@
 package Interpreter;
 
+import Exceptions.InterpreterException;
 import Lexer.Lexer;
 import Parser.Model.Expressions.Literal;
 import Parser.Parser;
@@ -26,6 +27,18 @@ class ExecuteVisitorTest {
     }
 
     @Test
+    void visitExpressionSumIntFail() {
+        assertThrows(Exception.class, () -> {
+            String data = "1 + 2 + 3 + 123.2";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+            var expression = parser.parseExpression();
+
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            assertEquals(6, visitor.visit(expression).val);
+        });
+    }
+
+    @Test
     void visitExpressionMultiplyInt() throws Exception {
         String data = "1 * 2 * 3";
         Parser parser = new Parser(Lexer.lexerFactory(data));
@@ -33,6 +46,18 @@ class ExecuteVisitorTest {
 
         ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         assertEquals(6, visitor.visit(expression).val);
+    }
+
+    @Test
+    void visitExpressionMultiplyIntFail() {
+        assertThrows(Exception.class, () -> {
+            String data = "1 * 2.2 * 3";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+            var expression = parser.parseExpression();
+
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            assertEquals(6, visitor.visit(expression).val);
+        });
     }
 
     @Test
@@ -88,6 +113,18 @@ class ExecuteVisitorTest {
     }
 
     @Test
+    void visitListDefIntFail()  {
+        assertThrows(InterpreterException.class, () -> {
+            String data = "[2, 0, 5, 12, 0.2]";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+
+            var ASTree = parser.parseListDef();
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            ASTree.accept(visitor);
+        });
+    }
+
+    @Test
     void visitListDefIntComplex() throws Exception {
         String data = "[2 * 2 + 3, 1 / 3, 5 + 2, 12 * 1 * (1  + 2)]";
         Parser parser = new Parser(Lexer.lexerFactory(data));
@@ -108,6 +145,20 @@ class ExecuteVisitorTest {
         var res = ASTree.accept(visitor);
         assertEquals("[hello, world]", res.val.toString());
     }
+
+
+    @Test
+    void visitListDefStringFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String data = "[\"hello\", \"world\", 123]";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+
+            var ASTree = parser.parseListDef();
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            ASTree.accept(visitor);
+        });
+    }
+
 
     @Test
     void visitListDefDouble() throws Exception {
@@ -130,6 +181,17 @@ class ExecuteVisitorTest {
         var res = ASTree.accept(visitor);
         assertEquals("[1, 2, 3, 4, 5, 6, 7, 8, 9]", res.val.toString());
     }
+    @Test
+    void visitListSumFail() {
+        assertThrows(ClassCastException.class, () -> {
+            String data = "[1, 2, 3] + [4, 5, 6] + [7, 8, 9] + \"list?\"]";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+
+            var ASTree = parser.parseExpression();
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            ASTree.accept(visitor);
+        });
+    }
 
     @Test
     void visitListAdd() throws Exception {
@@ -145,6 +207,20 @@ class ExecuteVisitorTest {
     }
 
     @Test
+    void visitListAddFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String program = "int main(){" +
+                    "list<int> array = [0];" +
+                    "array.add(1);" +
+                    "array.add(2);" +
+                    "array.add(12.23);" +
+                    "return array;" +
+                    "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
     void visitListRemove() throws Exception {
         String program = "int main(){" +
                 "list<int> array = [0, 1, 2, 3];" +
@@ -155,6 +231,19 @@ class ExecuteVisitorTest {
         var result = executeProgram(program);
 
         assertEquals(result.val.toString(), "[2, 3]");
+    }
+
+    @Test
+    void visitListRemoveFail() {
+        assertThrows(Exception.class,  () -> {
+            String program = "int main(){" +
+                    "list<int> array = [0, 1, 2, 3];" +
+                    "array.remove(0);" +
+                    "array.remove(\"string\");" +
+                    "return array;" +
+                    "}";
+            executeProgram(program);
+        });
     }
 
     @Test
@@ -231,6 +320,18 @@ class ExecuteVisitorTest {
     }
 
     @Test
+    void visitListIndexingFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String program = "int main(){" +
+                    "list<int> array = [0, 1, 2];" +
+                    "int fakeArray = 123;" +
+                    "return array[0] + array[1] + fakeArray[2];" +
+                    "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
     void visitInequality() throws Exception{
         String data = "41 + 23 != (41 + 1) * 21";
         Parser parser = new Parser(Lexer.lexerFactory(data));
@@ -255,6 +356,17 @@ class ExecuteVisitorTest {
         var ASTree = parser.parseBaseCond();
         ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
         assertTrue(visitor.visit(ASTree));
+    }
+
+    @Test
+    void visitComparisonFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String data = "\"aaaa\" < 123";
+            Parser parser = new Parser(Lexer.lexerFactory(data));
+            var ASTree = parser.parseBaseCond();
+            ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
+            visitor.visit(ASTree);
+        });
     }
 
     @Test
@@ -423,6 +535,23 @@ class ExecuteVisitorTest {
         assertEquals("25",  executeProgram(program).val.toString());
     }
 
+
+
+    @Test
+    void visitFunctionCallFail(){
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "int sum(int a, int b){" +
+                            "return a + b;" +
+                            "}" +
+                            "int main(){" +
+                            "int result = suma(10, 15);" +
+                            "return result;" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
     @Test
     void visitFunctionCallDouble() throws Exception {
         String program =
@@ -434,6 +563,34 @@ class ExecuteVisitorTest {
                         "}";
 
         assertEquals("0.53",  executeProgram(program).val.toString());
+    }
+
+    @Test
+    void visitFunctionCallArgumentsFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "double sum(double f){" +
+                            "return 0.53 + f;" +
+                            "}" +
+                            "double main(){" +
+                            "   return sum(\"string\");" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
+    void visitFunctionCallArgumentsNumberFail() {
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "double sum(double f, int x){" +
+                            "return 0.53 + f;" +
+                            "}" +
+                            "double main(){" +
+                            "   return sum(\"string\");" +
+                            "}";
+            executeProgram(program);
+        });
     }
 
     @Test
@@ -452,7 +609,7 @@ class ExecuteVisitorTest {
     @Test
     void visitRecursiveFunctionCall() throws Exception {
         String program =
-                "int fib(int n){" +
+                 "int fib(int n){" +
                         "if (n == 0 || n == 1){"+
                         "   return n;" +
                         "};" +
@@ -466,8 +623,99 @@ class ExecuteVisitorTest {
     }
 
     @Test
-    void visitArrowExpression() throws Exception {
-        String data =
+    void visitRecursiveFunctionCallFail() {
+        assertThrows(StackOverflowError.class, () -> {
+            String program =
+                    "int fib(int n){" +
+                            "fib(n);" +
+                            "if (n == 0 || n == 1){"+
+                            "   return n;" +
+                            "};" +
+                            "return fib(n - 1) + fib(n - 2);" +
+                            "}" +
+                            "int main(){" +
+                            "return fib(5);" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
+    void visitBuiltInFunction() throws Exception {
+        String program =
+                "int main(){" +
+                        "print(0);" +
+                        "print(1.23);" +
+                        "print(\"hello world\");" +
+                        "print([1, 2, 3]);" +
+                        "return 0;" +
+                        "}";
+
+        executeProgram(program);
+    }
+
+    @Test
+    void variableScope() throws Exception {
+        String program =
+                "int main(){" +
+                            "int counter = 0;" +
+                            "while(counter < 10){" +
+                                "int j = 0;" +
+                                "counter = counter + 1;" +
+                            "};" +
+                           "while(counter < 20){" +
+                                "int j = 0;" +
+                                "counter = counter + 1;" +
+                           "};" +
+                            "return 0;" +
+                        "}";
+        executeProgram(program);
+    }
+
+    @Test
+    void variableAlreadyInScopeFail()  {
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "int main(){" +
+                            "int x = 10;" +
+                            "double x = 123.12;" +
+                            "return 0;" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
+    void variableAlreadyInParentScopeFail()  {
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "int main(){" +
+                            "int x = 0;" +
+                            "while(x < 10){" +
+                                "string x = \"hello world\";" +
+                                "x = x + 1;" +
+                            "};" +
+                            "return 0;" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
+    void variableDoesntExistInScope()  {
+        assertThrows(InterpreterException.class, () -> {
+            String program =
+                    "int main(){" +
+                            "int x = 0;" +
+                            "print(y);" +
+                            "}";
+            executeProgram(program);
+        });
+    }
+
+    @Test
+    void visitComplexProgram() throws Exception {
+        String program =
                 "string greetings(string name){"  +
                     "return \"greetings to \n\" + name;" +
                 "}" +
@@ -513,9 +761,6 @@ class ExecuteVisitorTest {
                     "return fib(6) + fib(5) + fib(4);" +
                 "}";
 
-        Parser parser = new Parser(Lexer.lexerFactory(data));
-        var ASTree = parser.parseProgram();
-        ExecuteVisitor visitor = new ExecuteVisitor(new Scope(null));
-        visitor.visit(ASTree);
+        assertEquals("16", executeProgram(program).val.toString());
     }
 }
