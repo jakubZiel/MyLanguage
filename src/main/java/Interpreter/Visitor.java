@@ -23,7 +23,7 @@ public interface Visitor {
 
     <T> Literal<T> visit(Expression expression) throws InterpreterException;
 
-    void visit(Program program) throws InterpreterException;
+    <T> Literal<T> visit(Program program) throws InterpreterException;
 
     <T> Literal<T> visit(ReturnInst returnInst) throws InterpreterException;
 

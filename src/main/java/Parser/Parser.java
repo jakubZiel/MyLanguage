@@ -352,7 +352,7 @@ public class Parser {
         match(getToken(), ANGLE_L, "list type opening expected");
 
         int nesting;
-        if (peekToken(0).tokenIs(INT, DOUBLE)) {
+        if (peekToken(0).tokenIs(INT, DOUBLE, STRING_T)) {
             type.type = getToken().type;
             match(getToken(), ANGLE_R,"Unclosed list type");
             return 1;

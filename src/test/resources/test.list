@@ -9,6 +9,10 @@ int fib(int n){
     return fib(n - 1) + fib(n - 2);
 }
 
+int l2(){
+    return [1, 2, 3];
+}
+
 void fun1(){
     fun2();
 }
@@ -25,7 +29,8 @@ void fun2(){
 
 int fun3(){
     int x = 3;
-
+    list<double> lll = [1.1, 2.2, 3.3];
+    lll = 123.123;
     if (x == 3){
         print("x == 3");
     } else {
@@ -43,7 +48,7 @@ int fun3(){
 int main(){
     print(greetings("jakub zielinski\n"));
     fun1();
-
+    print(l2());
     int y = 123;
     int z = 104;
     string someString = greetings("hello");

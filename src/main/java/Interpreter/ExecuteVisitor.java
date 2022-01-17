@@ -103,15 +103,17 @@ public class ExecuteVisitor implements Visitor{
         return (Literal<T>) scope.getVariable(identifier.getName()).getValue();
     }
 
-    public void visit(Program program) throws InterpreterException {
+    public <T> Literal<T> visit(Program program) throws InterpreterException {
         functions = Scope.getFunctions(program);
         calledFunction = new FunctionCall("App", null);
+        Literal<T> returned = null;
 
         if (program.getFunctions()
                 .stream()
                 .anyMatch(function -> function.getIdentifier().equals(FunctionDeclaration.MAIN))){
-            new FunctionCall(FunctionDeclaration.MAIN, new Arguments()).accept(this);
+            returned = new FunctionCall(FunctionDeclaration.MAIN, new Arguments()).accept(this);
         }
+        return returned;
     }
 
     public Literal visit(FunctionCall functionCall) throws InterpreterException {
@@ -219,7 +221,7 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(ListInsertDeleteCall listInsertDeleteCall) throws InterpreterException {
-        var variable = (Variable) scope.getVariable(listInsertDeleteCall.getIdentifier());
+        var variable = scope.getVariable(listInsertDeleteCall.getIdentifier());
         var list = (ListDef) variable.getValue();
 
         if (listInsertDeleteCall.getOperation() == TokenType.ADD_LIST)
@@ -232,7 +234,7 @@ public class ExecuteVisitor implements Visitor{
     }
 
     public void visit(ListOppCall listOppCall) throws InterpreterException {
-        var variable = (Variable) scope.getVariable(listOppCall.getIdentifier());
+        var variable = scope.getVariable(listOppCall.getIdentifier());
         var list = (ListDef) variable.getValue();
 
         if (listOppCall.getArrowExpression().getExpression() != null){
