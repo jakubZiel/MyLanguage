@@ -29,6 +29,7 @@ void fun2(){
 
 int fun3(){
     int x = 3;
+    int x = 12;
     list<double> lll = [1.1, 2.2, 3.3];
     lll = 123.123;
     if (x == 3){
