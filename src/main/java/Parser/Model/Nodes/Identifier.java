@@ -1,10 +1,13 @@
 package Parser.Model.Nodes;
 
+import Exceptions.InterpreterException;
+import Interpreter.Visitor;
 import Lexer.Token;
-import Parser.Model.Node;
+import Parser.Model.Expressions.Expression;
+import Parser.Model.Expressions.Literal;
 
-public class Identifier extends Node {
-    private String name;
+public class Identifier extends Expression {
+    private final String name;
 
     public Identifier(String name) {
         this.name = name;
@@ -19,5 +22,14 @@ public class Identifier extends Node {
         return "Identifier{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return visitor.visit(this);
     }
 }

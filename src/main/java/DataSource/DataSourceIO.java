@@ -1,6 +1,4 @@
 package DataSource;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lexer.Lexer;
 
 import static DataSource.DataSourceLine.NULL;
 import java.io.*;
@@ -24,10 +22,19 @@ public class DataSourceIO implements IDataSource{
             EOF = true;
             return NULL;
         }
-
         if ((char) consumed == '\n') {
-            current = 0;
             line++;
+            current = 0;
+            return '\n';
+        }
+
+        if ((char) consumed == '\\') {
+            char n = peek();
+            if (n == 'n') {
+                var nRead = source.read();
+                line++;
+                return '\n';
+            }
         } else
             current++;
 
@@ -61,15 +68,5 @@ public class DataSourceIO implements IDataSource{
     @Override
     public Position getCurrentPos() {
         return new Position(line, current);
-    }
-
-    public static void main(String[] args) throws IOException, UnexpectedCharException {
-        var src = new DataSourceIO("/media/jzielins/SD/sem6/TKOM/project/src/test/resources/test2.list");
-        Lexer l = new Lexer(src);
-        Object tok;
-        while(!src.isEOF()){
-             tok = l.scanToken().type;
-            System.out.println(tok);
-        }
     }
 }

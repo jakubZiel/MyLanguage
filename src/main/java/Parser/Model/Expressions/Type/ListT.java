@@ -18,4 +18,8 @@ public class ListT {
                 ", nesting=" + nesting +
                 '}';
     }
+
+    public TokenType getType() {
+        return type;
+    }
 }

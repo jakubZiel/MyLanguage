@@ -1,13 +1,12 @@
 package Lexer;
 
 import DataSource.DataSourceString;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
+import Exceptions.UnexpectedCharException;
 import DataSource.IDataSource;
 import static DataSource.DataSourceLine.NULL;
 import static Lexer.TokenType.*;
 import static java.lang.Character.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import DataSource.Position;
 
@@ -37,20 +36,18 @@ public class Lexer {
         } else if (isSpecial(character)) {
             return parseSpecial();
         } else if (character == '#') {
-            return parseComment();
+            parseComment();
+            return scanToken();
         }
         throw new IllegalArgumentException();
     }
 
-    private Token parseString() throws IOException, UnexpectedCharException {
+    private Token parseString() throws IOException {
         Position beg = dataSource.getCurrentPos();
         dataSource.consume();
 
         StringBuilder string = new StringBuilder();
         while (true) {
-            if (beg.line != dataSource.getLine() || dataSource.isEOF()) {
-                throw new UnexpectedCharException("unclosed string at " + beg, beg);
-            }
             char nextChar = dataSource.consume();
             if (nextChar == '"') {
                 break;
@@ -86,7 +83,13 @@ public class Lexer {
             } else
                 break;
         }
-        Object value = dotFound ? Double.parseDouble(number.toString()) : Integer.parseInt(number.toString());
+        Object value;
+        if (dotFound){
+            value = Double.parseDouble(number.toString());
+        }else {
+            value = Integer.parseInt(number.toString());
+        }
+
         return new Token(NUMBER_T, dataSource.getCurrentPos(), value);
     }
 
@@ -117,13 +120,12 @@ public class Lexer {
         return new Token(SINGLE_SPECIAL.get(String.valueOf(firstChar)), dataSource.getCurrentPos(),  String.valueOf(firstChar));
     }
 
-    private Token parseComment() throws IOException {
+    private void parseComment() throws IOException {
         int begLine = dataSource.getLine();
 
         while (!dataSource.isEOF() && begLine == dataSource.getLine()){
             dataSource.consume();
         }
-        return new Token(COMMENT_T, dataSource.getCurrentPos(), "comment");
     }
 
     private boolean isSpecial(char character) {
@@ -186,7 +188,6 @@ public class Lexer {
         KEYWORDS.put("filter", FILTER);
         KEYWORDS.put("add", ADD_LIST);
         KEYWORDS.put("remove", REMOVE_LIST);
-        KEYWORDS.put("print", PRINT);
 
         DOUBLE_SPECIAL.put("!=", N_EQUAL);
         DOUBLE_SPECIAL.put("==", EQUAL);

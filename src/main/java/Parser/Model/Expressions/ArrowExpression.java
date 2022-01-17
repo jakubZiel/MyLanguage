@@ -18,6 +18,18 @@ public class ArrowExpression {
         this.condition = condition;
     }
 
+    public String getArgument() {
+        return argument;
+    }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public Condition getCondition() {
+        return condition;
+    }
+
     @Override
     public String toString() {
         return "ArrowExpression{" +

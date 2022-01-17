@@ -1,12 +1,16 @@
 package Parser.Model.Blocks;
 
+import Exceptions.InterpreterException;
+import Interpreter.Visited;
+import Interpreter.Visitor;
+import Parser.Model.Expressions.Literal;
 import Parser.Model.Instructions.Instruction;
 
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Block {
+public class Block implements Visited {
 
     List<Instruction> instructions;
 
@@ -25,4 +29,13 @@ public class Block {
                 '}';
     }
 
+    public List<Instruction> getInstructions() {
+        return instructions;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+
+        return null;
+    }
 }

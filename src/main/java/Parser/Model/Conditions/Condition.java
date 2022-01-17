@@ -1,14 +1,17 @@
 package Parser.Model.Conditions;
 
+import Exceptions.InterpreterException;
+import Interpreter.Visited;
+import Interpreter.Visitor;
 import Lexer.TokenType;
-import Parser.Model.Node;
+import Parser.Model.Expressions.Literal;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Condition extends Node {
-    private List<Condition> conditions;
-    private List<TokenType> operators;
+public class Condition implements Visited {
+    private final List<Condition> conditions;
+    private final List<TokenType> operators;
 
     public Condition() {
         this.conditions = new LinkedList<>();
@@ -30,4 +33,18 @@ public class Condition extends Node {
                 ", operators=" + operators +
                 '}';
     }
+
+    public List<Condition> getConditions() {
+        return conditions;
+    }
+
+    public List<TokenType> getOperators() {
+        return operators;
+    }
+
+    @Override
+    public <T> Literal<T> accept(Visitor visitor) throws InterpreterException {
+        return null;
+    }
 }
+

@@ -1,6 +1,7 @@
 package Parser.Model.Instructions;
 
-import Parser.Model.Node;
+import Interpreter.Visited;
 
-public abstract class Instruction extends Node {
+
+public abstract class Instruction implements Visited {
 }

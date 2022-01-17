@@ -1,14 +1,12 @@
-package IntegerationTests;
+package Lexer;
 
-import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lexer.Lexer;
-import Lexer.Token;
+import Exceptions.UnexpectedCharException;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import Lexer.TokenType;
+
 import static Lexer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import DataSource.DataSourceIO;
@@ -70,7 +68,7 @@ class LexerDataSourceLine {
                 RETURN, NUMBER_T, SEMICOLON,
                 CURLY_R, END_T
         );
-        assertEquals(tokens, getTokenTypes(root + "/src/test/resources/test3.list"));
+        assertEquals(tokens, getTokenTypes(root + "/src/test/resources/test.list"));
     }
     /*
     @Test
@@ -101,7 +99,7 @@ class LexerDataSourceLine {
                 "}",
                 "\0"
         );
-        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test3.list"));
+        assertEquals(lexemes, getLexemes(root + "/src/test/resources/test.list"));
     }
      */
 }

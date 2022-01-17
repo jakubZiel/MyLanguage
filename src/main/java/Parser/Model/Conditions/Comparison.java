@@ -22,4 +22,16 @@ public class Comparison extends Condition {
                 ", right=" + right +
                 '}';
     }
+
+    public TokenType getOperator() {
+        return operator;
+    }
+
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
 }

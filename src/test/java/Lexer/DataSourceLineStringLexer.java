@@ -1,17 +1,14 @@
-package IntegerationTests;
+package Lexer;
 
 import DataSource.DataSourceString;
 import DataSource.IDataSource;
-import ExceptionHandler.Exceptions.UnexpectedCharException;
-import Lexer.Lexer;
+import Exceptions.UnexpectedCharException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import Lexer.Token;
 
 import static org.junit.jupiter.api.Assertions.*;
 
