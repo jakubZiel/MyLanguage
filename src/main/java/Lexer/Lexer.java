@@ -39,7 +39,7 @@ public class Lexer {
             parseComment();
             return scanToken();
         }
-        throw new IllegalArgumentException();
+        throw new UnexpectedCharException("Illegal character exception : " + character, dataSource.getCurrentPos());
     }
 
     private Token parseString() throws IOException {
